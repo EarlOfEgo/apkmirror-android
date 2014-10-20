@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="apkmirror_primary">@color/logo_orange</color>
+    <color name="apkmirror_primary_dark">@color/logo_orange_dark</color>
+    <color name="apkmirror_accent">@color/logo_orange</color>
+
+
+    <color name="toolbar_gray">#eeeeee</color>
+    <color name="logo_orange">#f05223</color>
+    <color name="logo_orange_dark">#ffd94a20</color>
+    <color name="background_gray">#e5e5e5</color>
+</resources>

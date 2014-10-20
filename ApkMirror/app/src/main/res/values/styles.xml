@@ -1,0 +1,14 @@
+<resources>
+
+    <style name="Theme.ApkMirrorTheme" parent="Theme.ApkMirrorThemeBase">
+        <!-- nothing to add - base is default for holo -->
+    </style>
+
+    <style name="Theme.ApkMirrorThemeBase" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/apkmirror_primary</item>
+        <item name="colorPrimaryDark">@color/apkmirror_primary_dark</item>
+        <item name="colorAccent">@color/apkmirror_accent</item>
+        <item name="android:windowBackground">@color/background_gray</item>
+    </style>
+
+</resources>
