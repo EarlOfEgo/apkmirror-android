@@ -47,9 +47,9 @@ public class RecentAppUpdateAdapter extends ArrayAdapter<AppUpdate, RecentAppUpd
     @Override
     public RecentAppsViewHolder onCreateViewHolder(final ViewGroup viewGroup, final int position) {
         @SuppressLint("InflateParams")
-        // don't use mInflater.inflate(R.layout.view_app, null); or the items get a wrap_content width
+        // don't use mInflater.inflate(R.layout.view_recents, null); or the items get a wrap_content width
         // don't attachToRoot (3rd argument). The RecyclerView will attach it later
-        final View view = mInflater.inflate(R.layout.view_app, viewGroup, false);
+        final View view = mInflater.inflate(R.layout.view_recents, viewGroup, false);
         return new RecentAppsViewHolder(view);
     }
 }

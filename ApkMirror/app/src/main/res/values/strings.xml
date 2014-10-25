@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">ApkMirror</string>
     <string name="recent_updates">Recent Updates</string>
+    <string name="app_action_install">install</string>
+    <string name="app_action_update">update</string>
+    <string name="app_action_open">open</string>
 </resources>

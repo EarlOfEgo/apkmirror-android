@@ -9,6 +9,8 @@
         <item name="colorPrimaryDark">@color/apkmirror_primary_dark</item>
         <item name="colorAccent">@color/apkmirror_accent</item>
         <item name="android:windowBackground">@color/background_gray</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
     </style>
 
 </resources>

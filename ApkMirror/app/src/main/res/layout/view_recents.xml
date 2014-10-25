@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:clickable="true"
+    android:padding="8dp"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:layout_height="56dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="48dp"
+            tools:src="@color/logo_orange_dark"
+            android:layout_height="48dp"
+            android:transitionName="testTransition"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/icon"
+            android:orientation="vertical"
+            android:layout_toStartOf="@+id/action"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:id="@+id/linearLayout"
+            android:layout_toRightOf="@+id/icon"
+            android:layout_toLeftOf="@+id/action">
+
+
+            <TextView
+                android:id="@android:id/text1"
+                android:text="Google Express v2.3 (October 16, 2014) blabla blubb with a very long name"
+                style="@style/Base.TextAppearance.AppCompat.Subhead"
+                android:layout_width="wrap_content"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@android:id/text2"
+                android:text="By Google Inc."
+                android:paddingTop="4dp"
+                style="@style/Base.TextAppearance.AppCompat.Caption"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/action"
+            android:text="@string/app_action_install"
+            android:textAllCaps="true"
+            android:background="?attr/selectableItemBackground"
+            android:textColor="?attr/colorAccent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/Base.TextAppearance.AppCompat.Button"
+            android:padding="4dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true" />
+
+    </RelativeLayout>
+
+
+</FrameLayout>
