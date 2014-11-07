@@ -97,18 +97,18 @@ public class DetailActivity extends BaseActivity {
 
             ((TextView) rootView.findViewById(R.id.detail_app_name))
                     .setText("" + mApp.getName());
-            ((TextView) rootView.findViewById(R.id.detail_app_file_name))
-                    .setText("" + mApp.getFilename());
-            ((TextView) rootView.findViewById(R.id.detail_app_version))
-                    .setText("" + mApp.getVersion());
-            ((TextView) rootView.findViewById(R.id.detail_app_uploaded))
-                    .setText("" + mApp.getUploaded());
-            ((TextView) rootView.findViewById(R.id.detail_app_file_size))
-                    .setText("" + mApp.getFilesize());
-            ((TextView) rootView.findViewById(R.id.detail_app_minimal_version))
-                    .setText("" + mApp.getMinSdk());
-            ((TextView) rootView.findViewById(R.id.detail_app_downloads))
-                    .setText("" + mApp.getDownloads());
+            ((TextView) rootView.findViewById(R.id.detail_app_file_name)).setText(
+                    "" + mApp.getFilename());
+            ((TextView) rootView.findViewById(R.id.detail_app_version)).setText(
+                    "" + mApp.getVersion());
+            ((TextView) rootView.findViewById(R.id.detail_app_uploaded)).setText(
+                    "" + mApp.getUploaded());
+            ((TextView) rootView.findViewById(R.id.detail_app_file_size)).setText(
+                    "" + mApp.getFilesize());
+            ((TextView) rootView.findViewById(R.id.detail_app_minimal_version)).setText(
+                    "" + mApp.getMinSdk());
+            ((TextView) rootView.findViewById(R.id.detail_app_downloads)).setText(
+                    "" + mApp.getDownloads());
             ((TextView) rootView.findViewById(R.id.detail_app_publisher)).setText(
                     "" + mApp.getPublisher());
 
@@ -130,7 +130,8 @@ public class DetailActivity extends BaseActivity {
 
             String url = mApp.getDownloadUrl();
             final String filename = mApp.getFilename();
-            //downloadService.startDownload(url, filename);
+            downloadService.startDownload(url, filename);
+
 
             Callback responseCallback = new Callback() {
                 @Override

@@ -1,8 +1,15 @@
 package com.pascalwelsch.apkmirror;
 
+import com.google.gson.Gson;
+
 import com.linearlistview.LinearListView;
 import com.pascalwelsch.apkmirror.model.AppUpdate;
 import com.pascalwelsch.apkmirror.model.AppUpdateBuilder;
+import com.pascalwelsch.apkmirror.model.Recents;
+import com.pascalwelsch.apkmirror.services.ApiService;
+import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 import com.squareup.picasso.Picasso;
 
 import android.app.ActivityOptions;
@@ -21,6 +28,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -112,11 +120,33 @@ public class HomeActivity extends BaseActivity implements LinearListView.OnItemC
 
         final RecentAppUpdateAdapter appAdapter = new RecentAppUpdateAdapter(this, getAppUpdate());
         mRecyclerView.setAdapter(appAdapter);*/
-
         mLinearList = (LinearListView) findViewById(R.id.recents);
-        mAdapter = new RecentsAdapter(this, getAppUpdate());
-        mLinearList.setAdapter(mAdapter);
+//        mAdapter = new RecentsAdapter(this, getAppUpdate());
+//        mLinearList.setAdapter(mAdapter);
         mLinearList.setOnItemClickListener(this);
+
+        ApiService.getRecents(new Callback() {
+            @Override
+            public void onFailure(final Request request, final IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(final Response response) throws IOException {
+                final Recents recents = new Gson()
+                        .fromJson(response.body().string(), Recents.class);
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mAdapter = new RecentsAdapter(HomeActivity.this, recents.getApps());
+                        mLinearList.setAdapter(mAdapter);
+                    }
+                });
+            }
+        });
+
+
     }
 
     public List<AppUpdate> getAppUpdate() {
