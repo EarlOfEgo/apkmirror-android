@@ -6,8 +6,11 @@ import 'package:shelf_exception_response/exception_response.dart';
 import 'package:shelf_bind/shelf_bind.dart';
 import 'routes/Recents.dart';
 
-main() {
+//io.InternetAddress ADDRESS = io.InternetAddress.ANY_IP_V4;
+io.InternetAddress ADDRESS = io.InternetAddress.LOOPBACK_IP_V4;
+int PORT = 4040;
 
+main() {
     Router rootRouter = router(handlerAdapter: handlerAdapter());
     rootRouter
         ..get('/', () => new Response.notFound('Hello ApkMirror!'))
@@ -19,9 +22,15 @@ main() {
     .addMiddleware(exceptionResponse())
     .addHandler(rootRouter.handler);
 
-    printRoutes(rootRouter);
+    print('starting server at ${ADDRESS.address}:$PORT');
+    shelf_io.serve(handler, ADDRESS, PORT).then((server) {
+        print('Server is now running at http://${server.address.host}:${server.port}');
 
-    shelf_io.serve(handler, io.InternetAddress.ANY_IP_V4, 4040).then((server) {
-        print('Serving at http://${server.address.host}:${server.port}');
+        print('\nRoutes:');
+        printRoutes(rootRouter);
+        print('\nLog:');
+    }, onError: (io.HttpServer server, stack) {
+        print('\nERROR: Could not start server.');
+        print(stack);
     });
 }
