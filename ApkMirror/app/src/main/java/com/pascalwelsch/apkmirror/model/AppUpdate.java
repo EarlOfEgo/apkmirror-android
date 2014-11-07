@@ -10,7 +10,9 @@ import android.os.Parcelable;
  */
 public class AppUpdate implements Parcelable {
 
-    public static final Creator<AppUpdate> CREATOR = new Creator<AppUpdate>() {
+
+    public static final Parcelable.Creator<AppUpdate> CREATOR
+            = new Parcelable.Creator<AppUpdate>() {
         public AppUpdate createFromParcel(Parcel source) {
             return new AppUpdate(source);
         }
@@ -19,9 +21,6 @@ public class AppUpdate implements Parcelable {
             return new AppUpdate[size];
         }
     };
-
-    @SerializedName("publisher")
-    private final String mPublisher;
 
     @SerializedName("downloadUrl")
     private String mDownloadUrl;
@@ -53,6 +52,9 @@ public class AppUpdate implements Parcelable {
     @SerializedName("packageName")
     private String mPackageName;
 
+    @SerializedName("publisher")
+    private String mPublisher;
+
     @SerializedName("sha1")
     private String mSha1;
 
@@ -67,6 +69,11 @@ public class AppUpdate implements Parcelable {
 
     @SerializedName("versionName")
     private String mVersionName;
+
+
+    public AppUpdate() {
+    }
+
 
     public AppUpdate(final String publisher, final String downloadUrl, final int downloads,
             final String filename, final int filesize, final String iconUrl,
@@ -113,10 +120,6 @@ public class AppUpdate implements Parcelable {
     @Override
     public int describeContents() {
         return 0;
-    }
-
-    public static Creator<AppUpdate> getCreator() {
-        return CREATOR;
     }
 
     public String getDownloadUrl() {
@@ -260,7 +263,6 @@ public class AppUpdate implements Parcelable {
         dest.writeString(this.mUploaded);
         dest.writeString(this.mUploader);
         dest.writeInt(this.mVersion);
-        dest.writeString(this.mPackageName);
         dest.writeString(this.mVersionName);
     }
 }
