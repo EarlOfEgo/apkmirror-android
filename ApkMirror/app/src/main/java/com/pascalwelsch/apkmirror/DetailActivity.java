@@ -117,24 +117,25 @@ public class DetailActivity extends BaseActivity {
                 public void onGenerated(Palette palette) {
                     int rgb = palette.getDarkVibrantColor(R.color.background_material_light);
                     mHeaderView.setBackgroundColor(rgb);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        Display mdisp = getActivity().getWindowManager().getDefaultDisplay();
+                        Point mdispSize = new Point();
+                        mdisp.getSize(mdispSize);
+                        int maxX = mdispSize.x;
+                        int maxY = mdispSize.y;
 
-                    Display mdisp = getActivity().getWindowManager().getDefaultDisplay();
-                    Point mdispSize = new Point();
-                    mdisp.getSize(mdispSize);
-                    int maxX = mdispSize.x;
-                    int maxY = mdispSize.y;
+                        int dx = Math.abs(maxX - mXPos);
+                        int dy = Math.abs(maxY - mYPos);
 
-                    int dx = Math.abs(maxX - mXPos);
-                    int dy = Math.abs(maxY - mYPos);
-
-                    final int endAnim = (int) Math.sqrt((dx * dx) + (dy * dy));
-                    ViewAnimationUtils.createCircularReveal(mHeaderView,
-                            mXPos,
-                            mYPos,
-                            0,
-                            endAnim
-                    ).setDuration(500)
-                            .start();
+                        final int endAnim = (int) Math.sqrt((dx * dx) + (dy * dy));
+                        ViewAnimationUtils.createCircularReveal(mHeaderView,
+                                mXPos,
+                                mYPos,
+                                0,
+                                endAnim
+                        ).setDuration(500)
+                                .start();
+                    }
                 }
             });
         }
