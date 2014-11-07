@@ -131,31 +131,33 @@ public class HomeActivity extends BaseActivity implements LinearListView.OnItemC
                 new AppUpdate("Calendar 201404014",
                         "http://www.apkmirror.com/wp-content/themes/APKMirror/ap_resize/ap_resize.php?src=http%3A%2F%2Fwww.apkmirror.com%2Fwp-content%2Fuploads%2F2014%2F10%2F542d25925355a.png",
                         "Amazon Mobile LLC", "October 23, 2014", "com.google.android.calendar",
+                        201404015),
+                new AppUpdate("Calendar 201404014",
+                        "http://www.apkmirror.com/wp-content/themes/APKMirror/ap_resize/ap_resize.php?src=http%3A%2F%2Fwww.apkmirror.com%2Fwp-content%2Fuploads%2F2014%2F10%2F542d25925355a.png",
+                        "Amazon Mobile LLC", "October 23, 2014", "com.google.android.calendar",
                         201404015)
         ));
         return updates;
     }
 
     @Override
-    public void onItemClick(final LinearListView linearListView, final View view, final int position,
-            final long l) {
+    public void onItemClick(final LinearListView linearListView, final View view,
+            final int position, final long l) {
         final AppUpdate appUpdate = (AppUpdate) mAdapter.getItem(position);
         final ImageView icon = (ImageView) view.findViewById(R.id.icon);
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
 
-                final Intent intent = DetailActivity.getInstance(HomeActivity.this, appUpdate);
+        final int[] xy = new int[2];
+        view.getLocationOnScreen(xy);
+        final Intent intent = DetailActivity
+                .getInstance(HomeActivity.this, appUpdate, xy[0], xy[1]);
 
-                Bundle bundle = Bundle.EMPTY;
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    ActivityOptions options = ActivityOptions
-                            .makeSceneTransitionAnimation(HomeActivity.this, icon,
-                                    "testTransition");
-                    bundle = options.toBundle();
-                }
-                startActivity(intent, bundle);
-            }
-        });
+        Bundle bundle = Bundle.EMPTY;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(
+                    HomeActivity.this, icon,
+                    "testTransition");
+            bundle = options.toBundle();
+        }
+        startActivity(intent, bundle);
     }
 }
