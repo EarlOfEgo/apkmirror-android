@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <style name="Theme.ApkMirrorTheme" parent="Theme.ApkMirrorThemeBase">
         <!-- add material specific styles -->
-    </style>
-
-    <style name="Theme.ApkMirrorTheme." parent="Theme.ApkMirrorTheme">
-        <!-- enable window content transitions -->
-        <item name="android:windowContentTransitions">true</item>
     </style>
 </resources>

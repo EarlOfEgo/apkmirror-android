@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * Created by pascalwelsch on 10/19/14.
  */
-public class HomeActivity extends BaseActivity {
+public class HomeActivity extends BaseActivity implements LinearListView.OnItemClickListener {
 
 
     private class RecentsAdapter extends BaseAdapter {
@@ -86,26 +86,11 @@ public class HomeActivity extends BaseActivity {
                 actionButton.setText(R.string.app_action_install);
             }
 
-            actionButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(final View v) {
-
-                    final Intent intent = DetailActivity.getInstance(HomeActivity.this, appUpdate);
-
-                    Bundle bundle = Bundle.EMPTY;
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        ActivityOptions options = ActivityOptions
-                                .makeSceneTransitionAnimation(HomeActivity.this, icon,
-                                        "testTransition");
-                        bundle = options.toBundle();
-                    }
-                    startActivity(intent, bundle);
-                }
-            });
-
             return view;
         }
     }
+
+    private RecentsAdapter mAdapter;
 
     private LinearListView mLinearList;
 
@@ -128,8 +113,9 @@ public class HomeActivity extends BaseActivity {
         mRecyclerView.setAdapter(appAdapter);*/
 
         mLinearList = (LinearListView) findViewById(R.id.recents);
-        final RecentsAdapter recentsAdapter = new RecentsAdapter(this, getAppUpdate());
-        mLinearList.setAdapter(recentsAdapter);
+        mAdapter = new RecentsAdapter(this, getAppUpdate());
+        mLinearList.setAdapter(mAdapter);
+        mLinearList.setOnItemClickListener(this);
     }
 
     public List<AppUpdate> getAppUpdate() {
@@ -148,5 +134,28 @@ public class HomeActivity extends BaseActivity {
                         201404015)
         ));
         return updates;
+    }
+
+    @Override
+    public void onItemClick(final LinearListView linearListView, final View view, final int position,
+            final long l) {
+        final AppUpdate appUpdate = (AppUpdate) mAdapter.getItem(position);
+        final ImageView icon = (ImageView) view.findViewById(R.id.icon);
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+
+                final Intent intent = DetailActivity.getInstance(HomeActivity.this, appUpdate);
+
+                Bundle bundle = Bundle.EMPTY;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    ActivityOptions options = ActivityOptions
+                            .makeSceneTransitionAnimation(HomeActivity.this, icon,
+                                    "testTransition");
+                    bundle = options.toBundle();
+                }
+                startActivity(intent, bundle);
+            }
+        });
     }
 }
