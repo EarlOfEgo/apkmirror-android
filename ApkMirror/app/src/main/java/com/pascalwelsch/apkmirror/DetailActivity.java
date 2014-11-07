@@ -1,6 +1,14 @@
 package com.pascalwelsch.apkmirror;
 
+import com.google.gson.Gson;
+
 import com.pascalwelsch.apkmirror.model.AppUpdate;
+import com.pascalwelsch.apkmirror.model.AppUpdateList;
+import com.pascalwelsch.apkmirror.services.DownloadService;
+import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
+import com.squareup.okhttp.ResponseBody;
 import com.squareup.picasso.Picasso;
 
 import android.annotation.TargetApi;
@@ -14,6 +22,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.graphics.Palette;
+import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +32,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import java.io.IOException;
 
 /**
  * Created by pascalwelsch on 10/25/14.
@@ -63,6 +74,7 @@ public class DetailActivity extends BaseActivity {
             switch (v.getId()) {
                 case R.id.detail_app_download_button:
                     //Download
+                    download();
                     break;
             }
         }
@@ -83,15 +95,20 @@ public class DetailActivity extends BaseActivity {
             mIcon = (ImageView) rootView.findViewById(R.id.icon);
             mHeaderView = (RelativeLayout) rootView.findViewById(R.id.header_layout);
 
-            ((TextView) rootView.findViewById(R.id.detail_app_file_name))
+            ((TextView) rootView.findViewById(R.id.detail_app_name))
                     .setText("" + mApp.getName());
+            ((TextView) rootView.findViewById(R.id.detail_app_file_name))
+                    .setText("" + mApp.getFilename());
             ((TextView) rootView.findViewById(R.id.detail_app_version))
-                    .setText("" + mApp.getVersionCode());
+                    .setText("" + mApp.getVersion());
             ((TextView) rootView.findViewById(R.id.detail_app_uploaded))
-                    .setText("" + mApp.getUpdateDate());
-            ((TextView) rootView.findViewById(R.id.detail_app_file_size)).setText("");
-            ((TextView) rootView.findViewById(R.id.detail_app_minimal_version)).setText("");
-            ((TextView) rootView.findViewById(R.id.detail_app_downloads)).setText("");
+                    .setText("" + mApp.getUploaded());
+            ((TextView) rootView.findViewById(R.id.detail_app_file_size))
+                    .setText("" + mApp.getFilesize());
+            ((TextView) rootView.findViewById(R.id.detail_app_minimal_version))
+                    .setText("" + mApp.getMinSdk());
+            ((TextView) rootView.findViewById(R.id.detail_app_downloads))
+                    .setText("" + mApp.getDownloads());
             ((TextView) rootView.findViewById(R.id.detail_app_publisher)).setText(
                     "" + mApp.getPublisher());
 
@@ -104,14 +121,38 @@ public class DetailActivity extends BaseActivity {
         @Override
         public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
-            Picasso.with(getActivity()).load(mApp.getIcon()).into(mIcon);
+            Picasso.with(getActivity()).load(mApp.getIconUrl()).into(mIcon);
             setPalette();
         }
 
+        private void download() {
+            final DownloadService downloadService = new DownloadService(getActivity());
+
+            String url = mApp.getDownloadUrl();
+            final String filename = mApp.getFilename();
+            //downloadService.startDownload(url, filename);
+
+            Callback responseCallback = new Callback() {
+                @Override
+                public void onFailure(final Request request, final IOException e) {
+
+                }
+
+                @Override
+                public void onResponse(final Response response) throws IOException {
+                    ResponseBody body = response.body();
+                    Log.v("myTag", body.string());
+
+                    Gson gson = new Gson();
+                    gson.fromJson(body.string(), AppUpdateList.class);
+                }
+            };
+        }
 
         @TargetApi(Build.VERSION_CODES.LOLLIPOP)
         private void setPalette() {
             final Bitmap bitmap = ((BitmapDrawable) mIcon.getDrawable()).getBitmap();
+
             Palette.generateAsync(bitmap, new Palette.PaletteAsyncListener() {
                 @Override
                 public void onGenerated(Palette palette) {
