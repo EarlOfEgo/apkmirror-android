@@ -17,3 +17,12 @@ brew install dart
 pub get
 dart bin/server.dart
 ```
+
+#### open in IntelliJ
+
+
+Open Project -> Choose the `apkmirror-android/server` folder
+
+Right click `pubspec.yaml` -> Pub: Get Dependencies
+
+run `bin/server.dart`
