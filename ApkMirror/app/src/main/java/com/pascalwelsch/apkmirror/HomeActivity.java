@@ -19,6 +19,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -105,10 +106,14 @@ public class HomeActivity extends BaseActivity implements LinearListView.OnItemC
 
     private RecyclerView mRecyclerView;
 
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        setupSwipeRefreshLayout();
 
         /*mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 
@@ -125,28 +130,7 @@ public class HomeActivity extends BaseActivity implements LinearListView.OnItemC
 //        mLinearList.setAdapter(mAdapter);
         mLinearList.setOnItemClickListener(this);
 
-        ApiService.getRecents(new Callback() {
-            @Override
-            public void onFailure(final Request request, final IOException e) {
-
-            }
-
-            @Override
-            public void onResponse(final Response response) throws IOException {
-                final Recents recents = new Gson()
-                        .fromJson(response.body().string(), Recents.class);
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mAdapter = new RecentsAdapter(HomeActivity.this, recents.getApps());
-                        mLinearList.setAdapter(mAdapter);
-                    }
-                });
-            }
-        });
-
-
+        refresh();
     }
 
     public List<AppUpdate> getAppUpdate() {
@@ -191,5 +175,50 @@ public class HomeActivity extends BaseActivity implements LinearListView.OnItemC
             bundle = options.toBundle();
         }
         startActivity(intent, bundle);
+    }
+
+    private void refresh() {
+
+        ApiService.getRecents(new Callback() {
+            @Override
+            public void onFailure(final Request request, final IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(final Response response) throws IOException {
+                final Recents recents = new Gson()
+                        .fromJson(response.body().string(), Recents.class);
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mAdapter = new RecentsAdapter(HomeActivity.this, recents.getApps());
+                        mLinearList.setAdapter(mAdapter);
+                        mSwipeRefreshLayout.setRefreshing(false);
+                    }
+                });
+            }
+        });
+    }
+
+    private void setupSwipeRefreshLayout() {
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(
+                R.id.swipeRefreshLayout);
+
+        if (mSwipeRefreshLayout != null) {
+            mSwipeRefreshLayout.setColorSchemeResources(
+                    R.color.color_swipetorefresh_1,
+                    R.color.color_swipetorefresh_2,
+                    R.color.color_swipetorefresh_1);
+
+            mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    refresh();
+                }
+            });
+        }
+
     }
 }
