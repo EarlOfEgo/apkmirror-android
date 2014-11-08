@@ -210,7 +210,7 @@ public class HomeActivity extends BaseActivity implements LinearListView.OnItemC
             mSwipeRefreshLayout.setColorSchemeResources(
                     R.color.color_swipetorefresh_1,
                     R.color.color_swipetorefresh_2,
-                    R.color.color_swipetorefresh_1);
+                    R.color.color_swipetorefresh_3);
 
             mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override

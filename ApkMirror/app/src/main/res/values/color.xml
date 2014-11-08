@@ -11,8 +11,8 @@
     <color name="logo_orange_dark">#ffd94a20</color>
     <color name="background_gray">#e5e5e5</color>
 
-    <color name="color_swipetorefresh_1">#ff00ff17</color>
-    <color name="color_swipetorefresh_2">#ff0b05ff</color>
-    <color name="color_swipetorefresh_3">#ffff1a29</color>
+    <color name="color_swipetorefresh_1">#F36F46</color>
+    <color name="color_swipetorefresh_2">#C25838</color>
+    <color name="color_swipetorefresh_3">#FFAC92</color>
 
 </resources>
