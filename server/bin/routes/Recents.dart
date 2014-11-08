@@ -165,6 +165,7 @@ App parseInfoHtml(String first) {
     String title = element.getElementsByTagName('h1').first.text;
     var img = element.getElementsByTagName('img').first;
     String iconLink = img.attributes.remove('src');
+    String originalIconUri = Uri.parse(iconLink).queryParameters.values.first;
     String downloadLink = element.getElementsByClassName('downloadButton').first.attributes.remove('href');
     String playStoreLink = element.getElementsByClassName('downloadButtons').first.getElementsByTagName('a').first.attributes.remove('href');
     String packageName = new RegExp(r'details\?id=(.*)').firstMatch(playStoreLink).group(1);
@@ -194,7 +195,7 @@ App parseInfoHtml(String first) {
         ..versionName = versionName
         ..sha1 = sha1
         ..downloads = downloads
-        ..iconUrl = iconLink
+        ..iconUrl = originalIconUri
         ..fileSize = fileSizeInByte
         ..packageName = packageName
         ..listingUrl = playStoreLink
@@ -205,6 +206,6 @@ App parseInfoHtml(String first) {
 }
 
 main() {
-    new Recents().get(10);
+    new Recents().get(1);
 
 }
