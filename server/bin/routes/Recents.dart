@@ -141,8 +141,9 @@ App parseInfoHtml(String first) {
     Document document = parse(first);
     Element element = document.getElementsByClassName('post-area').first;
     String title = element.getElementsByTagName('h1').first.text;
-    var element1 = element.getElementsByTagName('img').first;
-    String iconLink = element1.attributes.remove('src');
+    var img = element.getElementsByTagName('img').first;
+    String iconLink = img.attributes.remove('src');
+    String downloadLink = element.getElementsByClassName('downloadButton').first.attributes.remove('href');
     String infos = element.text;
     String version = new RegExp(r'Version: (.*)').allMatches(infos).last.group(1);
     String fileName = new RegExp(r'File name: (.*)').allMatches(infos).last.group(1);
@@ -163,6 +164,7 @@ App parseInfoHtml(String first) {
         ..sha1 = sha1
         ..downloads = 190123
         ..iconUrl = iconLink
+        ..downloadUrl = downloadLink
         .. uploader = uploader;
     //print('app: ${app.toJson()}');
     return app;
