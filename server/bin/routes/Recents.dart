@@ -32,18 +32,13 @@ class Recents {
 
     static DateTime recentsChangedDate = new DateTime.fromMillisecondsSinceEpoch(0);
 
-    int number;
-
     static List<App> apps = new List();
 
     Recents();
 
     Future<Recents> get(final int number) {
 
-        print(recentsChangedDate);
-
         Completer<Recents> requestCompleter = new Completer();
-        apps.add(new App("blubb", 23));
 
         new HttpClient().getUrl(Uri.parse('http://www.apkmirror.com/sitemap_index.xml'))
         .then((HttpClientRequest request) {
@@ -77,18 +72,14 @@ class Recents {
                 .then((String xmlData) {
                     List<String> appLinks = new List();
                     xmlData = removePiLine(xmlData);
-                    //print(xmlData.substring(0, 100));
-                    //print(xmlData.substring(xmlData.length - 100, xmlData.length));
                     XmlElement element = XML.parse(xmlData);
+                    int i = 0;
                     var items = element.queryAll('url').queryAll('loc')
                     .reversed.take(number).forEach((XmlNode node) {
+                        print(++i);
                         String toParseLink = node.toString();
-                        //print(toParseLink);
                         RegExp exp = new RegExp(r'<loc>(.*)<\/loc>');
                         Iterable<Match> matches = exp.allMatches(toParseLink);
-                        //print(matches.length);
-                        //print(matches.last.group(1));
-
                         if (!matches.isEmpty) {
                             var link = matches.last.group(1);
                             //print(link);
@@ -103,7 +94,7 @@ class Recents {
             }
         }).then((List<String> appLinks) {
             if (appLinks == null) {
-                return;
+                return null;
             }
             List<Future> appRequests = new List();
 
@@ -127,8 +118,6 @@ class Recents {
             }
 
             return Future.wait(appRequests).then((List<String> responses) {
-                //print("pages: ${responses.length}");
-                this.number = responses.length;
                 apps.clear();
                 for (String response in responses) {
                     apps.add(parseInfoHtml(response));
@@ -136,115 +125,16 @@ class Recents {
                 print('Loaded $number Recent Apps');
                 requestCompleter.complete(this);
             });
+        }).catchError(() {
+            recentsChangedDate = new DateTime.fromMillisecondsSinceEpoch(0);
         });
 
         return requestCompleter.future;
-        /*.then((String xmlData) {
-            xmlData = removePiLine(xmlData);
-            XmlElement sitemapsOverview = XML.parse(xmlData);
-            XmlNode urlNode = sitemapsOverview.queryAll('loc').where((XmlNode element) {
-                return element.toString().contains(RECENT_URL);
-            }).first;
-            XmlNode lastMod = urlNode.parent.children.query('lastmod').first;
-            RegExp exp = new RegExp(r'>(.*)<\/');
-            Iterable<Match> matches = exp.allMatches(lastMod.toString());
-            String timestamp = matches.last.group(1);
-            DateTime date = DateTime.parse(timestamp);
 
-            if (date.isBefore(recentsChangedDate)) {
-
-                //cache hit
-                requestCompleter.complete(this);
-            } else {
-                recentsChangedDate = date;
-
-                Future recentRequest = new HttpClient().getUrl(Uri.parse(RECENT_URL))
-                .then((
-                    HttpClientRequest request) {
-                    return request.close();
-                })
-                .then((response) => parseResponseToString(response))
-                .then((String xmlData) {
-                    print('completed: ${requestCompleter.isCompleted}');
-                    List<String> appLinks = new List();
-                    //print(contents);
-                    xmlData = removePiLine(xmlData);
-                    //print(xmlData.substring(0, 100));
-                    //print(xmlData.substring(xmlData.length - 100, xmlData.length));
-                    XmlElement element = XML.parse(xmlData);
-                    var items = element.queryAll('url').queryAll('loc')
-                    .reversed.take(number).forEach((XmlNode node) {
-                        String toParseLink = node.toString();
-                        //print(toParseLink);
-                        RegExp exp = new RegExp(r'<loc>(.*)<\/loc>');
-                        Iterable<Match> matches = exp.allMatches(toParseLink);
-                        //print(matches.length);
-                        //print(matches.last.group(1));
-
-                        if (!matches.isEmpty) {
-                            var link = matches.last.group(1);
-                            //print(link);
-                            appLinks.add(link);
-                        }
-
-                        /*print(node.toString());
-                RegExp exp = new RegExp(r'<link>(.*)<');
-                Iterable<Match> matches = exp.allMatches(node.toString());
-                print(matches.last.input);
-                //appLinks.add(matches.last.input);*/
-
-                        //XmlElement xmlnode = XML.parse(node.toString());
-                        //print(xmlnode);
-
-                        //print(appLinks.length);
-                    });
-                    //print(appLinks);
-                    //var items = element();
-
-                    //Iterable<Future> futures = new Iterable.generate(appLinks.length, (i) => new HttpClient().get(appLinks.));
-                    //Future.wait(requestFutures);
-                    List<Future> appRequests = new List();
-
-                    for (String link in appLinks) {
-                        Future linkRequest = new HttpClient().getUrl(Uri.parse(link)).then((
-                            HttpClientRequest request) {
-                            return request.close();
-                        }).then((HttpClientResponse response) {
-
-                            Completer<String> completer = new Completer();
-                            StringBuffer content = new StringBuffer();
-                            response.transform(UTF8.decoder).listen((String contents) {
-                                content.write(contents);
-                            }, onDone: () {
-                                completer.complete(content.toString());
-                            });
-
-                            return completer.future;
-                        });
-                        appRequests.add(linkRequest);
-                    }
-
-                    return Future.wait(appRequests).then((List<String> responses) {
-                        //print("pages: ${responses.length}");
-                        this.number = responses.length;
-                        apps.clear();
-                        for (String response in responses) {
-                            apps.add(parseInfoHtml(response));
-                        }
-                        print('Loaded $number Recent Apps');
-                        requestCompleter.complete(this);
-                    });
-
-                });
-
-                return recentRequest;
-            }
-            return requestCompleter.future;
-        });*/
     }
 
     Map toJson() => {
-        'number' : number,
+        'number' : apps.length,
         'apps' : apps
     };
 
