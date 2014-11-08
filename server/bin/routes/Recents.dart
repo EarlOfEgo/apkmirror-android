@@ -178,7 +178,8 @@ App parseInfoHtml(String first) {
     num fileSizeInByte = num.parse(new RegExp(r'\((.*) bytes')
     .firstMatch(fileSize.replaceAll(r',', '')).group(1));
     String uploaded = new RegExp(r'Uploaded: (.*)').allMatches(infos).last.group(1);
-    String minSdkVersion = new RegExp(r'Minimum Android version: (.*)').allMatches(infos).last.group(1);
+    String minSdkVersionText = new RegExp(r'Minimum Android version: (.*)').allMatches(infos).last.group(1);
+    int minSdkVersion = int.parse(new RegExp(r'API (.*)\)').firstMatch(minSdkVersionText).group(1));
     String md5 = new RegExp(r'MD5: (.*)').allMatches(infos).last.group(1);
     String sha1 = new RegExp(r'SHA1: (.*)').allMatches(infos).last.group(1);
     int downloads = int.parse(new RegExp(r'Downloads: (.*)').allMatches(infos)
@@ -188,7 +189,7 @@ App parseInfoHtml(String first) {
     App app = new App(title, 1)
         ..publisher = 'Google Inc.'
         ..filename = fileName
-        ..minSdk = 1
+        ..minSdk = minSdkVersion
         ..uploaded = new DateTime.now().toIso8601String()
         ..md5 = md5
         ..version = appVersion
