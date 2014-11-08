@@ -45,7 +45,7 @@ class Recents {
             var items = element.queryAll('url').queryAll('loc').reversed.take(number).forEach((
                 XmlNode node) {
                 String toParseLink = node.toString();
-                print(toParseLink);
+                //print(toParseLink);
                 RegExp exp = new RegExp(r'<loc>(.*)<\/loc>');
                 Iterable<Match> matches = exp.allMatches(toParseLink);
                 //print(matches.length);
@@ -95,7 +95,7 @@ class Recents {
             }
 
             return Future.wait(appRequests).then((List<String> responses) {
-                print("pages: ${responses.length}");
+                //print("pages: ${responses.length}");
                 this.number = responses.length;
                 for (String response in responses) {
                     apps.add(parseInfoHtml(response));
@@ -141,7 +141,7 @@ App parseInfoHtml(String first) {
         ..downloads = 190123
         ..iconUrl = iconLink
         .. uploader = uploader;
-    print('app: ${app.toJson()}');
+    //print('app: ${app.toJson()}');
     return app;
 }
 
