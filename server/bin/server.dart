@@ -14,7 +14,7 @@ main() {
     Router rootRouter = router(handlerAdapter: handlerAdapter());
     rootRouter
         ..get('/', () => new Response.notFound('Hello ApkMirror!'))
-        ..get('/recents', () => new Recents().get(10))
+        ..get('/recents', () => new Recents().get(20))
         ..get('/loaderio-92596b535f26ef8c84c13f0bb81fb937',
         () => new Response.ok('loaderio-92596b535f26ef8c84c13f0bb81fb937'))
         ..get('/apks', () => new Response.notFound('NOT FOUND'));

@@ -90,8 +90,10 @@ class Recents {
                     List<String> appLinks = new List();
                     xmlData = removePiLine(xmlData);
                     XmlElement element = XML.parse(xmlData);
+                    var takeItems = number * 1.6;
+                    print(takeItems);
                     var items = element.queryAll('url').queryAll('loc')
-                    .reversed.take(number * 2).forEach((XmlNode node) {
+                    .reversed.take(takeItems).forEach((XmlNode node) {
                         String toParseLink = node.toString();
                         RegExp exp = new RegExp(r'<loc>(.*)<\/loc>');
                         Iterable<Match> matches = exp.allMatches(toParseLink);
@@ -205,6 +207,6 @@ App parseInfoHtml(String first) {
 }
 
 main() {
-    new Recents().get(1);
+    new Recents().get(20);
 
 }
