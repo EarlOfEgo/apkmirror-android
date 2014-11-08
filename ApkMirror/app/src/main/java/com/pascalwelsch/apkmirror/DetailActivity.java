@@ -23,7 +23,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.graphics.Palette;
-import android.support.v7.widget.CardView;
 import android.transition.Explode;
 import android.util.Log;
 import android.view.Display;
@@ -48,8 +47,6 @@ public class DetailActivity extends BaseActivity {
         private AppUpdate mApp;
 
         private TextView mAppName;
-
-        private CardView mBottomLayout;
 
         private Button mDownloadButton;
 
@@ -109,8 +106,6 @@ public class DetailActivity extends BaseActivity {
 
             mAppName = (TextView) rootView.findViewById(R.id.detail_app_name);
             mAppName.setText("" + mApp.getName());
-
-            mBottomLayout = (CardView) rootView.findViewById(R.id.detail_app_bottom_layout);
 
             ((TextView) rootView.findViewById(R.id.detail_app_file_name)).setText(
                     "" + mApp.getFilename());

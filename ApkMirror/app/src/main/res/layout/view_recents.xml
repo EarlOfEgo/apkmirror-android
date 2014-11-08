@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="56dp"
@@ -11,7 +11,7 @@
         android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/icon"
+            android:id="@+id/recents_app_icon"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_alignParentLeft="true"
@@ -27,9 +27,9 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
-            android:layout_toEndOf="@+id/icon"
+            android:layout_toEndOf="@+id/recents_app_icon"
             android:layout_toLeftOf="@+id/action"
-            android:layout_toRightOf="@+id/icon"
+            android:layout_toRightOf="@+id/recents_app_icon"
             android:layout_toStartOf="@+id/action"
             android:orientation="vertical">
 
@@ -41,16 +41,15 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="Google Express v2.3 (October 16, 2014) blabla blubb with a very long name"
-                android:transitionName="nameTransition" />
+                android:transitionName="nameTransition"
+                tools:text="Google Express v2.3 (October 16, 2014) blabla blubb with a very long name" />
 
             <TextView
-                android:id="@android:id/text2"
-                style="@style/Base.TextAppearance.AppCompat.Caption"
+                android:id="@+id/recents_app_publisher"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingTop="4dp"
-                android:text="By Google Inc." />
+                android:transitionName="publisherTransition"
+                tools:text="By Google Inc." />
         </LinearLayout>
 
         <Button
@@ -70,4 +69,4 @@
     </RelativeLayout>
 
 
-</FrameLayout>
+</android.support.v7.widget.CardView>
