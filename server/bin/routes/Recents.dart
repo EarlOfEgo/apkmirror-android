@@ -170,6 +170,7 @@ App parseInfoHtml(String first) {
     String playStoreLink = element.getElementsByClassName('downloadButtons').first.getElementsByTagName('a').first.attributes.remove('href');
     String packageName = new RegExp(r'details\?id=(.*)').firstMatch(playStoreLink).group(1);
     String infos = element.text;
+    //print(infos);
     String version = new RegExp(r'Version: (.*)').allMatches(infos).last.group(1);
     int appVersion = int.parse(new RegExp(r'\((\d+)\)').allMatches(version).last.group(1));
     String versionName = new RegExp(r'(.*) \(').firstMatch(version).group(1);
@@ -185,9 +186,10 @@ App parseInfoHtml(String first) {
     int downloads = int.parse(new RegExp(r'Downloads: (.*)').allMatches(infos)
     .last.group(1).replaceAll(r',', ''));
     String uploader = new RegExp(r'Uploaded by: (.*)').allMatches(infos).last.group(1);
+    String publisher = new RegExp(r'By (.*)').allMatches(infos).last.group(1);
 
     App app = new App(title, 1)
-        ..publisher = 'Google Inc.'
+        ..publisher = publisher
         ..filename = fileName
         ..minSdk = minSdkVersion
         ..uploaded = new DateTime.now().toIso8601String()
@@ -207,6 +209,6 @@ App parseInfoHtml(String first) {
 }
 
 main() {
-    new Recents().get(20);
+    new Recents().get(1);
 
 }
