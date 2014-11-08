@@ -153,9 +153,7 @@ public class DetailActivity extends BaseActivity {
         private void download() {
             final DownloadService downloadService = new DownloadService(getActivity());
 
-            String url = mApp.getDownloadUrl();
-            final String filename = mApp.getFilename();
-            downloadService.startDownload(url, filename);
+            downloadService.startDownload(mApp);
 
             Callback responseCallback = new Callback() {
                 @Override

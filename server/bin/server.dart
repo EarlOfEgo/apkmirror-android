@@ -14,7 +14,7 @@ main() {
     Router rootRouter = router(handlerAdapter: handlerAdapter());
     rootRouter
         ..get('/', () => new Response.notFound('Hello ApkMirror!'))
-        ..get('/recents', () => new Recents().get(7))
+        ..get('/recents', () => new Recents().get(10))
         ..get('/apks', () => new Response.notFound('NOT FOUND'));
 
     var handler = const Pipeline()

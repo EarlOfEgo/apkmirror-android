@@ -20,6 +20,17 @@ class App extends Object with Serializable {
     num version = 0;
 
     App(this.name, this.version);
+
+    bool isSameApp(final App other){
+        bool samePackage = packageName == other.packageName;
+        return packageName != null && samePackage;
+    }
+
+    bool isNewerThan(final App other){
+        return version > other.version;
+    }
+
+    String toString() => '$packageName $versionName';
 }
 
 main() { /*
