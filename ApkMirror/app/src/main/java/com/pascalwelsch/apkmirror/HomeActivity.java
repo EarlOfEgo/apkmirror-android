@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 
 import com.linearlistview.LinearListView;
 import com.pascalwelsch.apkmirror.model.AppUpdate;
-import com.pascalwelsch.apkmirror.model.AppUpdateBuilder;
 import com.pascalwelsch.apkmirror.model.Recents;
 import com.pascalwelsch.apkmirror.services.ApiService;
 import com.squareup.okhttp.Callback;
@@ -20,6 +19,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,8 +29,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -74,7 +72,7 @@ public class HomeActivity extends BaseActivity implements LinearListView.OnItemC
             final AppUpdate appUpdate = (AppUpdate) getItem(position);
 
             final View view = mInflater.inflate(R.layout.view_recents, parent, false);
-            final TextView appName = (TextView) view.findViewById(android.R.id.text1);
+            final TextView appName = (TextView) view.findViewById(R.id.recents_app_name);
             final ImageView icon = (ImageView) view.findViewById(R.id.icon);
             final Button actionButton = (Button) view.findViewById(R.id.action);
             Picasso.with(mContext).load(appUpdate.getIconUrl()).into(icon);
@@ -149,45 +147,28 @@ public class HomeActivity extends BaseActivity implements LinearListView.OnItemC
 
     }
 
-    public List<AppUpdate> getAppUpdate() {
-        final List<AppUpdate> updates = new ArrayList<AppUpdate>();
-        updates.addAll(Arrays.asList(
-                new AppUpdateBuilder().setName("Chrome Beta 39.0.2171.37").setIconUrl(
-                        "http://www.apkmirror.com/wp-content/themes/APKMirror/ap_resize/ap_resize.php?src=http%3A%2F%2Fwww.apkmirror.com%2Fwp-content%2Fuploads%2F2014%2F10%2F54483b41e1242.png")
-                        .setPublisher("Google Inc.").setPackageName("com.chrome.beta")
-                        .setVersion(2171037).createAppUpdate(),
-                new AppUpdateBuilder().setName("Android Wear 1.0.2.1534065").setIconUrl(
-                        "http://www.apkmirror.com/wp-content/themes/APKMirror/ap_resize/ap_resize.php?src=http%3A%2F%2Fwww.apkmirror.com%2Fwp-content%2Fuploads%2F2014%2F10%2F5449802075ec4.png")
-                        .setPublisher("Google Inc.")
-                        .setPackageName("com.google.android.wearable.app").setVersion(201534065)
-                        .createAppUpdate(),
-                new AppUpdateBuilder().setName("Calendar 201404014").setIconUrl(
-                        "http://www.apkmirror.com/wp-content/themes/APKMirror/ap_resize/ap_resize.php?src=http%3A%2F%2Fwww.apkmirror.com%2Fwp-content%2Fuploads%2F2014%2F10%2F542d25925355a.png")
-                        .setPublisher("Amazon Mobile LLC")
-                        .setPackageName("com.google.android.calendar").setVersion(201404015)
-                        .createAppUpdate()
-        ));
-        return updates;
-    }
 
     @Override
     public void onItemClick(final LinearListView linearListView, final View view,
             final int position, final long l) {
         final AppUpdate appUpdate = (AppUpdate) mAdapter.getItem(position);
-        final ImageView icon = (ImageView) view.findViewById(R.id.icon);
+        final View icon = view.findViewById(R.id.icon);
+        final View name = view.findViewById(R.id.recents_app_name);
+        final View card = findViewById(R.id.card_view_animation_hack);
 
         final int[] xy = new int[2];
         view.getLocationOnScreen(xy);
         final Intent intent = DetailActivity
                 .getInstance(HomeActivity.this, appUpdate, xy[0], xy[1]);
 
-        //ApiService.getRecents(responseCallback);
-
         Bundle bundle = Bundle.EMPTY;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(
-                    HomeActivity.this, icon,
-                    "testTransition");
+            ActivityOptions options = ActivityOptions
+                    .makeSceneTransitionAnimation(HomeActivity.this,
+                            Pair.create(icon, "iconTransition"),
+                            Pair.create(card, "cardTransition"),
+                            Pair.create(name, "nameTransition"));
+
             bundle = options.toBundle();
         }
         startActivity(intent, bundle);

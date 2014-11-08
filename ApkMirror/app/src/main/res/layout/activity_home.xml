@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_width="match_parent">
+    android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar_actionbar"
         android:layout_width="match_parent"
-        android:minHeight="?android:attr/actionBarSize"
-        android:background="?attr/colorPrimary"
         android:layout_height="wrap_content"
-        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        android:background="?attr/colorPrimary"
         android:elevation="4dp"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+        android:minHeight="?android:attr/actionBarSize"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -22,60 +22,60 @@
         tools:context=".HomeActivity">
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
-                app:cardCornerRadius="0dp"
-                app:cardUseCompatPadding="true"
+                android:layout_height="wrap_content"
                 android:layout_margin="4dp"
-                android:layout_height="wrap_content">
+                app:cardCornerRadius="0dp"
+                app:cardUseCompatPadding="true">
 
                 <LinearLayout
-                    android:orientation="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
                     <TextView
-                        android:text="@string/recent_updates"
                         style="@style/Base.TextAppearance.AppCompat.Headline"
-                        android:padding="14dp"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:padding="14dp"
+                        android:text="@string/recent_updates" />
 
                     <com.linearlistview.LinearListView
                         android:id="@+id/recents"
-                        android:orientation="vertical"
-                        android:showDividers="middle|beginning"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:divider="@color/background_gray"
                         android:dividerPadding="8dp"
-                        app:dividerThickness="1dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:orientation="vertical"
+                        android:showDividers="middle|beginning"
+                        app:dividerThickness="1dp" />
                 </LinearLayout>
 
             </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
-                app:cardCornerRadius="2dp"
-                app:cardUseCompatPadding="true"
+                android:layout_height="wrap_content"
                 android:layout_margin="4dp"
-                android:layout_height="wrap_content">
+                app:cardCornerRadius="2dp"
+                app:cardUseCompatPadding="true">
 
                 <LinearLayout
-                    android:orientation="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
                     <TextView
-                        android:text="Google Apps"
                         style="@style/Base.TextAppearance.AppCompat.Headline"
-                        android:padding="14dp"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:padding="14dp"
+                        android:text="Google Apps" />
                 </LinearLayout>
 
             </android.support.v7.widget.CardView>
@@ -83,38 +83,22 @@
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
+                android:clickable="true"
+                android:foreground="?android:attr/selectableItemBackground"
                 app:cardCornerRadius="2dp"
                 app:cardUseCompatPadding="true"
-                app:contentPadding="16dp"
-                android:foreground="?android:attr/selectableItemBackground"
-                android:clickable="true" />
+                app:contentPadding="16dp" />
+
 
             <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                app:cardCornerRadius="2dp"
-                app:cardUseCompatPadding="true"
-                app:contentPadding="16dp"
-                android:foreground="?android:attr/selectableItemBackground"
-                android:clickable="true" />
 
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                app:cardCornerRadius="2dp"
+                android:id="@+id/card_view_animation_hack"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:transitionName="cardTransition"
+                android:visibility="gone"
                 app:cardUseCompatPadding="true"
-                app:contentPadding="16dp"
-                android:foreground="?android:attr/selectableItemBackground"
-                android:clickable="true" />
-
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                app:cardUseCompatPadding="true"
-                app:cardCornerRadius="2dp"
-                app:contentPadding="16dp"
-                android:foreground="?android:attr/selectableItemBackground"
-                android:clickable="true" />
+                app:contentPadding="0dp" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

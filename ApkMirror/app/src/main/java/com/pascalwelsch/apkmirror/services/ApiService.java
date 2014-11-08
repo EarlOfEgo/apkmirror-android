@@ -9,7 +9,7 @@ import com.squareup.okhttp.Request;
  */
 public class ApiService {
 
-    private final static String BASE_URL = "http://10.10.254.255:4040";
+    private final static String BASE_URL = "http://46.38.241.106:4040";
 
     private final static String URL_RECENTS = "/recents";
 
