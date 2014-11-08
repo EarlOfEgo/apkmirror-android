@@ -32,7 +32,7 @@ public class AppUpdate implements Parcelable {
     private String mFilename;
 
     @SerializedName("filesize")
-    private int mFilesize;
+    private long mFilesize;
 
     @SerializedName("iconUrl")
     private String mIconUrl;
@@ -76,7 +76,7 @@ public class AppUpdate implements Parcelable {
 
 
     public AppUpdate(final String publisher, final String downloadUrl, final int downloads,
-            final String filename, final int filesize, final String iconUrl,
+            final String filename, final long filesize, final String iconUrl,
             final String listingUrl, final String md5, final int minSdk, final String name,
             final String packageName, final String sha1, final String uploaded,
             final String uploader, final int version, final String versionName) {
@@ -103,7 +103,7 @@ public class AppUpdate implements Parcelable {
         this.mDownloadUrl = in.readString();
         this.mDownloads = in.readInt();
         this.mFilename = in.readString();
-        this.mFilesize = in.readInt();
+        this.mFilesize = in.readLong();
         this.mIconUrl = in.readString();
         this.mListingUrl = in.readString();
         this.mMd5 = in.readString();
@@ -146,11 +146,11 @@ public class AppUpdate implements Parcelable {
         mFilename = filename;
     }
 
-    public int getFilesize() {
+    public long getFilesize() {
         return mFilesize;
     }
 
-    public void setFilesize(final int filesize) {
+    public void setFilesize(final long filesize) {
         mFilesize = filesize;
     }
 
@@ -252,7 +252,7 @@ public class AppUpdate implements Parcelable {
         dest.writeString(this.mDownloadUrl);
         dest.writeInt(this.mDownloads);
         dest.writeString(this.mFilename);
-        dest.writeInt(this.mFilesize);
+        dest.writeLong(this.mFilesize);
         dest.writeString(this.mIconUrl);
         dest.writeString(this.mListingUrl);
         dest.writeString(this.mMd5);
