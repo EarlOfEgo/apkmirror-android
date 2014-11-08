@@ -29,6 +29,8 @@ public class DownloadService {
 
             long id = intent.getExtras().getLong(DownloadManager.EXTRA_DOWNLOAD_ID);
 
+            // Register installed receiver and unregister complete receiver
+            mContext.unregisterReceiver(this);
             registerBroadcastReceiverInstalled(id);
 
             DownloadManager dm = (DownloadManager) mContext.getSystemService(
@@ -53,6 +55,7 @@ public class DownloadService {
 
         @Override
         public void onReceive(final Context context, Intent intent) {
+            mContext.unregisterReceiver(this);
             DownloadManager dm = (DownloadManager) mContext.getSystemService(
                     Context.DOWNLOAD_SERVICE);
             int removed = dm.remove(mId);
