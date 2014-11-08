@@ -146,13 +146,19 @@ App parseInfoHtml(String first) {
     String downloadLink = element.getElementsByClassName('downloadButton').first.attributes.remove('href');
     String infos = element.text;
     String version = new RegExp(r'Version: (.*)').allMatches(infos).last.group(1);
+    print(version);
+    int appVersion = int.parse(new RegExp(r'\((\d+)\)').allMatches(version).last.group(1));
+    print(appVersion);
+    String versionName = new RegExp(r'(.*) \(').firstMatch(version).group(1);
+    print(versionName);
     String fileName = new RegExp(r'File name: (.*)').allMatches(infos).last.group(1);
     String uploaded = new RegExp(r'Uploaded: (.*)').allMatches(infos).last.group(1);
     String fileSize = new RegExp(r'File size: (.*)').allMatches(infos).last.group(1);
     String minSdkVersion = new RegExp(r'Minimum Android version: (.*)').allMatches(infos).last.group(1);
     String md5 = new RegExp(r'MD5: (.*)').allMatches(infos).last.group(1);
     String sha1 = new RegExp(r'SHA1: (.*)').allMatches(infos).last.group(1);
-    String downloads = new RegExp(r'Downloads: (.*)').allMatches(infos).last.group(1);
+    int downloads = int.parse(new RegExp(r'Downloads: (.*)').allMatches(infos).last.group(1).replaceAll(r',',
+    ''));
     String uploader = new RegExp(r'Uploaded by: (.*)').allMatches(infos).last.group(1);
 
     App app = new App(title, 1)
@@ -161,8 +167,10 @@ App parseInfoHtml(String first) {
         ..minSdk = 1
         ..uploaded = new DateTime.now().toIso8601String()
         ..md5 = md5
+        ..version = appVersion
+        ..versionName = versionName
         ..sha1 = sha1
-        ..downloads = 190123
+        ..downloads = downloads
         ..iconUrl = iconLink
         ..downloadUrl = downloadLink
         .. uploader = uploader;
