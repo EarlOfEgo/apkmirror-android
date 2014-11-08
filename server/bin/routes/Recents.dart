@@ -30,6 +30,25 @@ String removePiLine(final String xmlString) {
 
 class Recents {
 
+    static void addAppIfNewer(App app, List<App> apps) {
+        bool replacedApp = false;
+        for (App addedApp in apps) {
+            if (addedApp.isSameApp(app)) {
+                if (app.isNewerThan(addedApp)) {
+                    apps.remove(addedApp);
+                    apps.add(app);
+                    replacedApp = true;
+                    break;
+                } else {
+                    // don't add
+                }
+            }
+        }
+        if (!replacedApp) {
+            apps.add(app);
+        }
+    }
+
     static DateTime recentsChangedDate = new DateTime.fromMillisecondsSinceEpoch(0);
 
     static List<App> apps = new List();
@@ -74,7 +93,7 @@ class Recents {
                     xmlData = removePiLine(xmlData);
                     XmlElement element = XML.parse(xmlData);
                     var items = element.queryAll('url').queryAll('loc')
-                    .reversed.take(number).forEach((XmlNode node) {
+                    .reversed.take(number * 2).forEach((XmlNode node) {
                         String toParseLink = node.toString();
                         RegExp exp = new RegExp(r'<loc>(.*)<\/loc>');
                         Iterable<Match> matches = exp.allMatches(toParseLink);
@@ -115,11 +134,14 @@ class Recents {
             }
 
             return Future.wait(appRequests).then((List<String> responses) {
-                apps.clear();
+                List<App> foundApp = new List();
                 for (String response in responses) {
-                    apps.add(parseInfoHtml(response));
+                    var app = parseInfoHtml(response);
+                    addAppIfNewer(app, foundApp);
                 }
-                print('Loaded $number Recent Apps');
+                apps.clear();
+                apps.insertAll(0, foundApp.take(number));
+                print('Loaded ${apps.length} Recent Apps');
                 requestCompleter.complete(this);
             });
         }).catchError(() {
@@ -177,7 +199,7 @@ App parseInfoHtml(String first) {
         ..packageName = packageName
         ..listingUrl = playStoreLink
         ..downloadUrl = downloadLink
-        .. uploader = uploader;
+        ..uploader = uploader;
     //print('app: ${app.toJson()}');
     return app;
 }
