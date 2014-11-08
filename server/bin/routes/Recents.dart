@@ -91,7 +91,6 @@ class Recents {
                     xmlData = removePiLine(xmlData);
                     XmlElement element = XML.parse(xmlData);
                     var takeItems = number * 1.6;
-                    print(takeItems);
                     var items = element.queryAll('url').queryAll('loc')
                     .reversed.take(takeItems).forEach((XmlNode node) {
                         String toParseLink = node.toString();
@@ -187,6 +186,7 @@ App parseInfoHtml(String first) {
     .last.group(1).replaceAll(r',', ''));
     String uploader = new RegExp(r'Uploaded by: (.*)').allMatches(infos).last.group(1);
     String publisher = new RegExp(r'By (.*)').allMatches(infos).last.group(1);
+    //print('publisher: $publisher');
 
     App app = new App(title, 1)
         ..publisher = publisher
