@@ -144,21 +144,22 @@ App parseInfoHtml(String first) {
     var img = element.getElementsByTagName('img').first;
     String iconLink = img.attributes.remove('src');
     String downloadLink = element.getElementsByClassName('downloadButton').first.attributes.remove('href');
+    String playStoreLink = element.getElementsByClassName('downloadButtons').first.getElementsByTagName('a').first.attributes.remove('href');
+    String packageName = new RegExp(r'details\?id=(.*)').firstMatch(playStoreLink).group(1);
     String infos = element.text;
     String version = new RegExp(r'Version: (.*)').allMatches(infos).last.group(1);
-    print(version);
     int appVersion = int.parse(new RegExp(r'\((\d+)\)').allMatches(version).last.group(1));
-    print(appVersion);
     String versionName = new RegExp(r'(.*) \(').firstMatch(version).group(1);
-    print(versionName);
     String fileName = new RegExp(r'File name: (.*)').allMatches(infos).last.group(1);
-    String uploaded = new RegExp(r'Uploaded: (.*)').allMatches(infos).last.group(1);
     String fileSize = new RegExp(r'File size: (.*)').allMatches(infos).last.group(1);
+    num fileSizeInByte = num.parse(new RegExp(r'\((.*) bytes')
+    .firstMatch(fileSize.replaceAll(r',', '')).group(1));
+    String uploaded = new RegExp(r'Uploaded: (.*)').allMatches(infos).last.group(1);
     String minSdkVersion = new RegExp(r'Minimum Android version: (.*)').allMatches(infos).last.group(1);
     String md5 = new RegExp(r'MD5: (.*)').allMatches(infos).last.group(1);
     String sha1 = new RegExp(r'SHA1: (.*)').allMatches(infos).last.group(1);
-    int downloads = int.parse(new RegExp(r'Downloads: (.*)').allMatches(infos).last.group(1).replaceAll(r',',
-    ''));
+    int downloads = int.parse(new RegExp(r'Downloads: (.*)').allMatches(infos)
+    .last.group(1).replaceAll(r',', ''));
     String uploader = new RegExp(r'Uploaded by: (.*)').allMatches(infos).last.group(1);
 
     App app = new App(title, 1)
@@ -172,6 +173,9 @@ App parseInfoHtml(String first) {
         ..sha1 = sha1
         ..downloads = downloads
         ..iconUrl = iconLink
+        ..fileSize = fileSizeInByte
+        ..packageName = packageName
+        ..listingUrl = playStoreLink
         ..downloadUrl = downloadLink
         .. uploader = uploader;
     //print('app: ${app.toJson()}');
