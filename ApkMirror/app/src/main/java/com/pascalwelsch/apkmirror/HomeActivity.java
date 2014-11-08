@@ -182,7 +182,7 @@ public class HomeActivity extends BaseActivity implements LinearListView.OnItemC
         ApiService.getRecents(new Callback() {
             @Override
             public void onFailure(final Request request, final IOException e) {
-
+                mSwipeRefreshLayout.setRefreshing(false);
             }
 
             @Override
