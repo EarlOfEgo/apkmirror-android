@@ -31,20 +31,20 @@ String removePiLine(final String xmlString) {
 class Recents {
 
     static void addAppIfNewer(App app, List<App> apps) {
-        bool replacedApp = false;
+        bool isOlder = false;
         for (App addedApp in apps) {
             if (addedApp.isSameApp(app)) {
+                //print('found same app $addedApp : $app');
                 if (app.isNewerThan(addedApp)) {
                     apps.remove(addedApp);
                     apps.add(app);
-                    replacedApp = true;
-                    break;
                 } else {
-                    // don't add
+                    isOlder = true;
                 }
+                break;
             }
         }
-        if (!replacedApp) {
+        if (!isOlder) {
             apps.add(app);
         }
     }
