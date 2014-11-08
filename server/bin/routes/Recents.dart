@@ -21,53 +21,58 @@ class Recents {
 
         Completer<Recents> requestCompleter = new Completer();
 
-        new HttpClient().get('www.apkmirror.com', 80, 'feed').then((HttpClientRequest request) {
+        new HttpClient().getUrl(Uri.parse('http://www.apkmirror.com/apps_post-sitemap.xml')).then((
+            HttpClientRequest request) {
             return request.close();
-        }).then((response) {
+        }).then((HttpClientResponse response) {
+            Completer<String> completer = new Completer();
+            StringBuffer buffer = new StringBuffer();
+            response.transform(UTF8.decoder).listen((String data) {
+                buffer.write(data);
+            }, onDone: () {
+                completer.complete(buffer.toString());
+            });
+            return completer.future;
+        }).then((String xmlData) {
 
-            Completer<List<String>> completer = new Completer();
             List<String> appLinks = new List();
-            response.transform(UTF8.decoder).listen((contents) {
-                //print(contents);
+            //print(contents);
+            var position = xmlData.indexOf('\n');
+            xmlData = xmlData.substring(position + 1, xmlData.length);
+            //print(xmlData.substring(0, 100));
+            //print(xmlData.substring(xmlData.length - 100, xmlData.length));
+            XmlElement element = XML.parse(xmlData);
+            var items = element.queryAll('url').queryAll('loc').reversed.take(number).forEach((
+                XmlNode node) {
+                String toParseLink = node.toString();
+                print(toParseLink);
+                RegExp exp = new RegExp(r'<loc>(.*)<\/loc>');
+                Iterable<Match> matches = exp.allMatches(toParseLink);
+                //print(matches.length);
+                //print(matches.last.group(1));
 
-                XmlElement element = XML.parse(contents);
-                var items = element.queryAll('item').queryAll('link').forEach((XmlNode node) {
-                    String toParseLink = node.toString();
-                    //print(toParseLink);
-                    RegExp exp = new RegExp(r'<link>(.*)<\/link>');
-                    Iterable<Match> matches = exp.allMatches(toParseLink);
-                    //print(matches.length);
-                    //print(matches.last.group(1));
+                if (!matches.isEmpty) {
+                    var link = matches.last.group(1);
+                    //print(link);
+                    appLinks.add(link);
+                }
 
-                    if (!matches.isEmpty) {
-                        var link = matches.last.group(1);
-                        //print(link);
-                        appLinks.add(link);
-                    }
-
-                    /*print(node.toString());
+                /*print(node.toString());
                 RegExp exp = new RegExp(r'<link>(.*)<');
                 Iterable<Match> matches = exp.allMatches(node.toString());
                 print(matches.last.input);
                 //appLinks.add(matches.last.input);*/
 
-                    //XmlElement xmlnode = XML.parse(node.toString());
-                    //print(xmlnode);
+                //XmlElement xmlnode = XML.parse(node.toString());
+                //print(xmlnode);
 
-                    //print(appLinks.length);
-                });
-                print(appLinks);
-                //var items = element();
-
-                //Iterable<Future> futures = new Iterable.generate(appLinks.length, (i) => new HttpClient().get(appLinks.));
-                //Future.wait(requestFutures);
-
-            }, onDone: () {
-                completer.complete(appLinks);
+                //print(appLinks.length);
             });
+            print(appLinks);
+            //var items = element();
 
-            return completer.future;
-        }).then((List<String> appLinks) {
+            //Iterable<Future> futures = new Iterable.generate(appLinks.length, (i) => new HttpClient().get(appLinks.));
+            //Future.wait(requestFutures);
             List<Future> appRequests = new List();
 
             for (String link in appLinks) {
@@ -141,7 +146,6 @@ App parseInfoHtml(String first) {
 }
 
 main() {
-
-
+    new Recents().get(10);
 
 }
