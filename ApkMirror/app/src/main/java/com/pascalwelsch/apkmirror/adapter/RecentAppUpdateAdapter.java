@@ -6,10 +6,14 @@ import com.squareup.picasso.Picasso;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,6 +27,8 @@ public class RecentAppUpdateAdapter
 
     public class RecentAppsViewHolder extends RecyclerView.ViewHolder {
 
+        private final Button mActionButton;
+
         private final ImageView mAppIcon;
 
         private final TextView mAppName;
@@ -34,19 +40,21 @@ public class RecentAppUpdateAdapter
             mAppName = (TextView) itemView.findViewById(R.id.recents_app_name);
             mAppIcon = (ImageView) itemView.findViewById(R.id.recents_app_icon);
             mPublisherName = (TextView) itemView.findViewById(R.id.recents_app_publisher);
+            mActionButton = (Button) itemView.findViewById(R.id.recents_app_action_button);
         }
     }
 
     private final View.OnClickListener mOnClickListener;
 
+    private final View.OnTouchListener mOnTouchListener;
+
     private Context mContext;
 
     private LayoutInflater mInflater;
 
-    private final View.OnTouchListener mOnTouchListener;
-
     public RecentAppUpdateAdapter(final Context context, final List<AppUpdate> appUpdates,
-            final View.OnClickListener onClickListener, final View.OnTouchListener onTouchListener) {
+            final View.OnClickListener onClickListener,
+            final View.OnTouchListener onTouchListener) {
         super(appUpdates);
         mOnClickListener = onClickListener;
         mOnTouchListener = onTouchListener;
@@ -60,6 +68,25 @@ public class RecentAppUpdateAdapter
         viewHolder.mAppName.setText("" + appUpdate.getName());
         viewHolder.mPublisherName.setText("" + appUpdate.getName());
         Picasso.with(mContext).load(appUpdate.getIconUrl()).into(viewHolder.mAppIcon);
+        final Resources resources = mContext.getResources();
+
+        try {
+            PackageInfo pInfo = mContext.getPackageManager()
+                    .getPackageInfo(appUpdate.getPackageName(), 0);
+            int installedVersion = pInfo.versionCode;
+            int updateVersion = appUpdate.getVersion();
+            if (installedVersion < updateVersion) {
+                viewHolder.mActionButton.setText(R.string.app_action_update);
+                viewHolder.mActionButton.setTextColor(resources.getColor(R.color.highlights));
+            } else {
+                viewHolder.mActionButton.setText(R.string.app_action_open);
+                viewHolder.mActionButton.setTextColor(resources.getColor(R.color.text_light));
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            viewHolder.mActionButton.setText(R.string.app_action_install);
+            viewHolder.mActionButton.setTextColor(resources.getColor(R.color.highlights));
+        }
+
     }
 
     @Override
@@ -72,7 +99,5 @@ public class RecentAppUpdateAdapter
         view.setOnTouchListener(mOnTouchListener);
         return new RecentAppsViewHolder(view);
     }
-
-
 }
 

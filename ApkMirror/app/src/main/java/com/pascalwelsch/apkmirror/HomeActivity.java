@@ -6,6 +6,7 @@ import com.pascalwelsch.apkmirror.adapter.RecentAppUpdateAdapter;
 import com.pascalwelsch.apkmirror.model.AppUpdate;
 import com.pascalwelsch.apkmirror.model.Recents;
 import com.pascalwelsch.apkmirror.services.ApiService;
+import com.pascalwelsch.apkmirror.widgets.CustomSwipeRefreshLayout;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
@@ -14,6 +15,7 @@ import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -35,6 +37,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
 
     private RecyclerView mRecyclerView;
 
+    private CustomSwipeRefreshLayout mSwipeRefreshLayout;
+
     private int mXTouchPos = 0;
 
     private int mYTouchPos = 0;
@@ -55,6 +59,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
         mRecyclerView.setItemAnimator(itemAnimator);
 
+        setupSwipeRefreshLayout();
+
         ApiService.getRecents(new Callback() {
             @Override
             public void onFailure(final Request request, final IOException e) {
@@ -70,11 +76,15 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                     @Override
                     public void run() {
                         mAdapter.updateList(recents.getApps());
+
+                        final int amount = mAdapter.getItemCount();
                         mRecyclerView.animate();
                     }
                 });
             }
         });
+
+        refresh();
     }
 
     @Override
@@ -112,5 +122,52 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
             mYTouchPos = (int) event.getY();
         }
         return false;
+    }
+
+    private void refresh() {
+
+        ApiService.getRecents(new Callback() {
+            @Override
+            public void onFailure(final Request request, final IOException e) {
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+
+            @Override
+            public void onResponse(final Response response) throws IOException {
+                final Recents recents = new Gson()
+                        .fromJson(response.body().string(), Recents.class);
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mAdapter.updateList(recents.getApps());
+                        mRecyclerView.animate();
+                        mSwipeRefreshLayout.setRefreshing(false);
+                    }
+                });
+            }
+        });
+    }
+
+    private void setupSwipeRefreshLayout() {
+        mSwipeRefreshLayout = (CustomSwipeRefreshLayout) findViewById(
+                R.id.swipeRefreshLayout);
+
+        mSwipeRefreshLayout.setScrollView(findViewById(R.id.recents_scroll_view));
+
+        if (mSwipeRefreshLayout != null) {
+            mSwipeRefreshLayout.setColorSchemeResources(
+                    R.color.color_swipetorefresh_1,
+                    R.color.color_swipetorefresh_2,
+                    R.color.color_swipetorefresh_3);
+
+            mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    refresh();
+                }
+            });
+        }
+
     }
 }
