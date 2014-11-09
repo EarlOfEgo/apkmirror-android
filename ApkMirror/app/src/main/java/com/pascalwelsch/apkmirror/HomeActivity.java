@@ -2,7 +2,6 @@ package com.pascalwelsch.apkmirror;
 
 import com.google.gson.Gson;
 
-import com.linearlistview.LinearListView;
 import com.pascalwelsch.apkmirror.adapter.RecentAppUpdateAdapter;
 import com.pascalwelsch.apkmirror.model.AppUpdate;
 import com.pascalwelsch.apkmirror.model.Recents;
@@ -15,9 +14,11 @@ import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
+import android.view.MotionEvent;
 import android.view.View;
 
 import java.io.IOException;
@@ -26,12 +27,17 @@ import java.util.ArrayList;
 /**
  * Created by pascalwelsch on 10/19/14.
  */
-public class HomeActivity extends BaseActivity implements LinearListView.OnItemClickListener {
+public class HomeActivity extends BaseActivity implements View.OnClickListener,
+        View.OnTouchListener {
 
 
     private RecentAppUpdateAdapter mAdapter;
 
     private RecyclerView mRecyclerView;
+
+    private int mXTouchPos = 0;
+
+    private int mYTouchPos = 0;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -43,8 +49,11 @@ public class HomeActivity extends BaseActivity implements LinearListView.OnItemC
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(linearLayoutManager);
-        mAdapter = new RecentAppUpdateAdapter(HomeActivity.this, new ArrayList<AppUpdate>());
+        mAdapter = new RecentAppUpdateAdapter(HomeActivity.this, new ArrayList<AppUpdate>(),
+                this, this);
         mRecyclerView.setAdapter(mAdapter);
+        RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
+        mRecyclerView.setItemAnimator(itemAnimator);
 
         ApiService.getRecents(new Callback() {
             @Override
@@ -61,18 +70,18 @@ public class HomeActivity extends BaseActivity implements LinearListView.OnItemC
                     @Override
                     public void run() {
                         mAdapter.updateList(recents.getApps());
+                        mRecyclerView.animate();
                     }
                 });
             }
         });
     }
 
-
     @Override
-    public void onItemClick(final LinearListView linearListView, final View view,
-            final int position, final long l) {
+    public void onClick(final View view) {
+        int position = mRecyclerView.getChildPosition(view);
         final AppUpdate appUpdate = mAdapter.getItem(position);
-        final View icon = view.findViewById(R.id.icon);
+        final View icon = view.findViewById(R.id.recents_app_icon);
         final View name = view.findViewById(R.id.recents_app_name);
         final View publisher = view.findViewById(R.id.recents_app_publisher);
         final View card = findViewById(R.id.card_view_animation_hack);
@@ -80,7 +89,7 @@ public class HomeActivity extends BaseActivity implements LinearListView.OnItemC
         final int[] xy = new int[2];
         view.getLocationOnScreen(xy);
         final Intent intent = DetailActivity
-                .getInstance(HomeActivity.this, appUpdate, xy[0], xy[1]);
+                .getInstance(HomeActivity.this, appUpdate, mXTouchPos, xy[1] + mYTouchPos);
 
         Bundle bundle = Bundle.EMPTY;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -94,5 +103,14 @@ public class HomeActivity extends BaseActivity implements LinearListView.OnItemC
             bundle = options.toBundle();
         }
         startActivity(intent, bundle);
+    }
+
+    @Override
+    public boolean onTouch(final View v, final MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            mXTouchPos = (int) event.getX();
+            mYTouchPos = (int) event.getY();
+        }
+        return false;
     }
 }

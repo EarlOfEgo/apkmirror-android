@@ -181,16 +181,13 @@ public class DetailActivity extends BaseActivity {
                             palette.getLightMutedColor(R.color.bright_foreground_material_light));
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && mHeaderView
                             .isAttachedToWindow()) {
-                        Display mdisp = getActivity().getWindowManager().getDefaultDisplay();
-                        Point mdispSize = new Point();
+
+                        final Display mdisp = getActivity().getWindowManager().getDefaultDisplay();
+                        final Point mdispSize = new Point();
                         mdisp.getSize(mdispSize);
-                        int maxX = mdispSize.x;
-                        int maxY = mdispSize.y;
-
-                        int dx = Math.abs(maxX - mXPos);
-                        int dy = Math.abs(maxY - mYPos);
-
-                        final int endAnim = (int) Math.sqrt((dx * dx) + (dy * dy));
+                        final int maxX = mdispSize.x;
+                        final int maxY = mdispSize.y;
+                        final int endAnim = Math.max(maxX, maxY);
                         ViewAnimationUtils.createCircularReveal(mHeaderView,
                                 mXPos,
                                 mYPos,

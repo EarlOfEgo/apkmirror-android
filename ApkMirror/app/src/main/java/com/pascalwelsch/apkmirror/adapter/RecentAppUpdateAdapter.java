@@ -37,12 +37,19 @@ public class RecentAppUpdateAdapter
         }
     }
 
+    private final View.OnClickListener mOnClickListener;
+
     private Context mContext;
 
     private LayoutInflater mInflater;
 
-    public RecentAppUpdateAdapter(final Context context, final List<AppUpdate> appUpdates) {
+    private final View.OnTouchListener mOnTouchListener;
+
+    public RecentAppUpdateAdapter(final Context context, final List<AppUpdate> appUpdates,
+            final View.OnClickListener onClickListener, final View.OnTouchListener onTouchListener) {
         super(appUpdates);
+        mOnClickListener = onClickListener;
+        mOnTouchListener = onTouchListener;
         mInflater = LayoutInflater.from(context);
         mContext = context;
     }
@@ -61,6 +68,8 @@ public class RecentAppUpdateAdapter
         // don't use mInflater.inflate(R.layout.view_recents, null); or the items get a wrap_content width
         // don't attachToRoot (3rd argument). The RecyclerView will attach it later
         final View view = mInflater.inflate(R.layout.view_recents, viewGroup, false);
+        view.setOnClickListener(mOnClickListener);
+        view.setOnTouchListener(mOnTouchListener);
         return new RecentAppsViewHolder(view);
     }
 
