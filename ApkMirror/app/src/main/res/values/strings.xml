@@ -4,4 +4,11 @@
     <string name="app_action_install">install</string>
     <string name="app_action_update">update</string>
     <string name="app_action_open">open</string>
+    <string name="downloads_text">Downloads</string>
+    <string name="version_text">Version:</string>
+    <string name="minimal_version_text">Minimal Version:</string>
+    <string name="file_name_text">File Name:</string>
+    <string name="md5_text">MD5:</string>
+    <string name="sha1_text">SHA1:</string>
+    <string name="uploader_text">Uploaded by:</string>
 </resources>

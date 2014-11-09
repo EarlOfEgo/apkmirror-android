@@ -28,11 +28,11 @@ public class AppUpdate implements Parcelable {
     @SerializedName("downloads")
     private int mDownloads;
 
+    @SerializedName("fileSize")
+    private long mFileSize;
+
     @SerializedName("filename")
     private String mFilename;
-
-    @SerializedName("filesize")
-    private long mFilesize;
 
     @SerializedName("iconUrl")
     private String mIconUrl;
@@ -84,7 +84,7 @@ public class AppUpdate implements Parcelable {
         mDownloadUrl = downloadUrl;
         mDownloads = downloads;
         mFilename = filename;
-        mFilesize = filesize;
+        mFileSize = filesize;
         mIconUrl = iconUrl;
         mListingUrl = listingUrl;
         mMd5 = md5;
@@ -103,7 +103,7 @@ public class AppUpdate implements Parcelable {
         this.mDownloadUrl = in.readString();
         this.mDownloads = in.readInt();
         this.mFilename = in.readString();
-        this.mFilesize = in.readLong();
+        this.mFileSize = in.readLong();
         this.mIconUrl = in.readString();
         this.mListingUrl = in.readString();
         this.mMd5 = in.readString();
@@ -138,20 +138,20 @@ public class AppUpdate implements Parcelable {
         mDownloads = downloads;
     }
 
+    public long getFileSize() {
+        return mFileSize;
+    }
+
+    public void setFileSize(final long filesize) {
+        mFileSize = filesize;
+    }
+
     public String getFilename() {
         return mFilename;
     }
 
     public void setFilename(final String filename) {
         mFilename = filename;
-    }
-
-    public long getFilesize() {
-        return mFilesize;
-    }
-
-    public void setFilesize(final long filesize) {
-        mFilesize = filesize;
     }
 
     public String getIconUrl() {
@@ -252,7 +252,7 @@ public class AppUpdate implements Parcelable {
         dest.writeString(this.mDownloadUrl);
         dest.writeInt(this.mDownloads);
         dest.writeString(this.mFilename);
-        dest.writeLong(this.mFilesize);
+        dest.writeLong(this.mFileSize);
         dest.writeString(this.mIconUrl);
         dest.writeString(this.mListingUrl);
         dest.writeString(this.mMd5);

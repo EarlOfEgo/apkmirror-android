@@ -18,4 +18,8 @@
         <item name="android:textSize">20sp</item>
     </style>
 
+    <style name="DownloadButton" parent="@style/Base.TextAppearance.AppCompat.Button">
+        <item name="android:textColor">#ffffff</item>
+    </style>
+
 </resources>

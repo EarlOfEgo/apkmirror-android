@@ -94,7 +94,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         final View icon = view.findViewById(R.id.recents_app_icon);
         final View name = view.findViewById(R.id.recents_app_name);
         final View publisher = view.findViewById(R.id.recents_app_publisher);
-        final View card = findViewById(R.id.card_view_animation_hack);
+//        final View card = findViewById(R.id.card_view_animation_hack);
 
         final int[] xy = new int[2];
         view.getLocationOnScreen(xy);
@@ -106,7 +106,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
             ActivityOptions options = ActivityOptions
                     .makeSceneTransitionAnimation(HomeActivity.this,
                             Pair.create(icon, "iconTransition"),
-                            Pair.create(card, "cardTransition"),
+//                            Pair.create(card, "cardTransition"),
                             Pair.create(publisher, "publisherTransition"),
                             Pair.create(name, "nameTransition"));
 

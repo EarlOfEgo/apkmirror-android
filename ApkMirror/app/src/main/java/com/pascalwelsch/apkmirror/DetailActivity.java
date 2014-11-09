@@ -1,14 +1,8 @@
 package com.pascalwelsch.apkmirror;
 
-import com.google.gson.Gson;
-
 import com.pascalwelsch.apkmirror.model.AppUpdate;
-import com.pascalwelsch.apkmirror.model.AppUpdateList;
 import com.pascalwelsch.apkmirror.services.DownloadService;
-import com.squareup.okhttp.Callback;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
-import com.squareup.okhttp.ResponseBody;
+import com.pascalwelsch.apkmirror.utils.Formater;
 import com.squareup.picasso.Picasso;
 
 import android.annotation.TargetApi;
@@ -24,7 +18,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.graphics.Palette;
 import android.transition.Explode;
-import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,10 +25,12 @@ import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by pascalwelsch on 10/25/14.
@@ -48,11 +43,13 @@ public class DetailActivity extends BaseActivity {
 
         private TextView mAppName;
 
+        private ImageView mBlurryImage;
+
         private Button mDownloadButton;
 
         private Button mGetItOnPlayButton;
 
-        private RelativeLayout mHeaderView;
+        private View mHeaderView;
 
         private ImageView mIcon;
 
@@ -82,9 +79,9 @@ public class DetailActivity extends BaseActivity {
                     //Download
                     download();
                     break;
-                case R.id.detail_app_play_store:
-                    openPlayStore();
-                    break;
+//                case R.id.detail_app_play_store:
+//                    openPlayStore();
+//                    break;
             }
         }
 
@@ -102,7 +99,9 @@ public class DetailActivity extends BaseActivity {
             View rootView = inflater.inflate(R.layout.fragment_app_detail, null);
 
             mIcon = (ImageView) rootView.findViewById(R.id.icon);
-            mHeaderView = (RelativeLayout) rootView.findViewById(R.id.header_layout);
+            mHeaderView = rootView.findViewById(R.id.details_app_header);
+
+            mBlurryImage = (ImageView) rootView.findViewById(R.id.details_app_blurry_image);
 
             mAppName = (TextView) rootView.findViewById(R.id.detail_app_name);
             mAppName.setText("" + mApp.getName());
@@ -111,25 +110,45 @@ public class DetailActivity extends BaseActivity {
                     "" + mApp.getFilename());
             ((TextView) rootView.findViewById(R.id.detail_app_version)).setText(
                     "" + mApp.getVersion());
-            ((TextView) rootView.findViewById(R.id.detail_app_uploaded)).setText(
-                    "" + mApp.getUploaded());
-            ((TextView) rootView.findViewById(R.id.detail_app_file_size)).setText(
-                    "" + mApp.getFilesize());
+            ((TextView) rootView.findViewById(R.id.detail_app_md5)).setText(
+                    "" + mApp.getMd5());
+            ((TextView) rootView.findViewById(R.id.detail_app_sha1)).setText(
+                    "" + mApp.getSha1());
+            ((TextView) rootView.findViewById(R.id.detail_app_uploader)).setText(
+                    "" + mApp.getUploader());
             ((TextView) rootView.findViewById(R.id.detail_app_minimal_version)).setText(
                     "" + mApp.getMinSdk());
             ((TextView) rootView.findViewById(R.id.detail_app_downloads)).setText(
                     "" + mApp.getDownloads());
+            ((TextView) rootView.findViewById(R.id.detail_app_file_size)).setText(
+                    Formater.humanReadableByteCount(0 + mApp.getFileSize(), false));
             ((TextView) rootView.findViewById(R.id.detail_app_publisher)).setText(
                     "" + mApp.getPublisher());
 
-            mGetItOnPlayButton = (Button) rootView.findViewById(R.id.detail_app_play_store);
+            try {
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+                Date date = null;
+                date = format.parse(mApp.getUploaded());
+                String formatedDate = DateFormat.getDateInstance().format(date);
+                String formatedTime = DateFormat.getTimeInstance().format(date);
+
+                ((TextView) rootView.findViewById(R.id.detail_app_uploaded_day))
+                        .setText("" + formatedDate);
+                ((TextView) rootView.findViewById(R.id.detail_app_uploaded_time))
+                        .setText("" + formatedTime);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+//            mGetItOnPlayButton = (Button) rootView.findViewById(R.id.detail_app_download_button);
             if (mApp.getListingUrl() != null) {
-                mGetItOnPlayButton.setVisibility(View.VISIBLE);
-                mGetItOnPlayButton.setOnClickListener(this);
+//                mGetItOnPlayButton.setVisibility(View.VISIBLE);
+//                mGetItOnPlayButton.setOnClickListener(this);
             }
 
             mDownloadButton = (Button) rootView.findViewById(R.id.detail_app_download_button);
             mDownloadButton.setOnClickListener(this);
+            Formater.setButtonText(getActivity(), mDownloadButton, mApp);
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 getActivity().getWindow().setExitTransition(new Explode());
@@ -142,6 +161,7 @@ public class DetailActivity extends BaseActivity {
         public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
             Picasso.with(getActivity()).load(mApp.getIconUrl()).into(mIcon);
+            Picasso.with(getActivity()).load(mApp.getIconUrl()).into(mBlurryImage);
             makeSexyMaterialAnimations();
         }
 
@@ -149,22 +169,6 @@ public class DetailActivity extends BaseActivity {
             final DownloadService downloadService = new DownloadService(getActivity());
 
             downloadService.startDownload(mApp);
-
-            Callback responseCallback = new Callback() {
-                @Override
-                public void onFailure(final Request request, final IOException e) {
-
-                }
-
-                @Override
-                public void onResponse(final Response response) throws IOException {
-                    ResponseBody body = response.body();
-                    Log.v("myTag", body.string());
-
-                    Gson gson = new Gson();
-                    gson.fromJson(body.string(), AppUpdateList.class);
-                }
-            };
         }
 
         @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -195,6 +199,7 @@ public class DetailActivity extends BaseActivity {
                                 endAnim
                         ).setDuration(500)
                                 .start();
+//                        mIcon.setBackgroundColor(rgb);
                     }
                 }
             });
