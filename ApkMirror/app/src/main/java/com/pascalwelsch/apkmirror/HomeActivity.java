@@ -2,179 +2,139 @@ package com.pascalwelsch.apkmirror;
 
 import com.google.gson.Gson;
 
-import com.linearlistview.LinearListView;
+import com.pascalwelsch.apkmirror.adapter.HeaderAdapter;
+import com.pascalwelsch.apkmirror.adapter.RecentAppUpdateAdapter;
+import com.pascalwelsch.apkmirror.adapter.stickyheader.StickyHeadersBuilder;
+import com.pascalwelsch.apkmirror.adapter.stickyheader.StickyHeadersItemDecoration;
 import com.pascalwelsch.apkmirror.model.AppUpdate;
-import com.pascalwelsch.apkmirror.model.AppUpdateBuilder;
 import com.pascalwelsch.apkmirror.model.Recents;
 import com.pascalwelsch.apkmirror.services.ApiService;
+import com.pascalwelsch.apkmirror.widgets.CustomSwipeRefreshLayout;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
-import com.squareup.picasso.Picasso;
 
 import android.app.ActivityOptions;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
+import android.util.Pair;
+import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Created by pascalwelsch on 10/19/14.
  */
-public class HomeActivity extends BaseActivity implements LinearListView.OnItemClickListener {
+public class HomeActivity extends BaseActivity implements View.OnClickListener,
+        View.OnTouchListener {
 
 
-    private class RecentsAdapter extends BaseAdapter {
+    private RecentAppUpdateAdapter mAdapter;
 
-        private final LayoutInflater mInflater;
-
-        private Context mContext;
-
-        private List<AppUpdate> mUpdates;
-
-        public RecentsAdapter(final Context context, final List<AppUpdate> updates) {
-            mContext = context;
-
-            mUpdates = updates;
-            mInflater = LayoutInflater.from(context);
-        }
-
-        @Override
-        public int getCount() {
-            return mUpdates.size();
-        }
-
-        @Override
-        public Object getItem(final int position) {
-            return mUpdates.get(position);
-        }
-
-        @Override
-        public long getItemId(final int position) {
-            return ((Object) mUpdates.get(position)).hashCode();
-        }
-
-        @Override
-        public View getView(final int position, final View convertView, final ViewGroup parent) {
-            final AppUpdate appUpdate = (AppUpdate) getItem(position);
-
-            final View view = mInflater.inflate(R.layout.view_recents, parent, false);
-            final TextView appName = (TextView) view.findViewById(android.R.id.text1);
-            final ImageView icon = (ImageView) view.findViewById(R.id.icon);
-            final Button actionButton = (Button) view.findViewById(R.id.action);
-            Picasso.with(mContext).load(appUpdate.getIconUrl()).into(icon);
-            appName.setText(appUpdate.getName());
-
-            try {
-                PackageInfo pInfo = getPackageManager()
-                        .getPackageInfo(appUpdate.getPackageName(), 0);
-                int installedVersion = pInfo.versionCode;
-                int updateVersion = appUpdate.getVersion();
-                if (installedVersion < updateVersion) {
-                    actionButton.setText(R.string.app_action_update);
-                } else {
-                    actionButton.setText(R.string.app_action_open);
-                }
-            } catch (PackageManager.NameNotFoundException e) {
-                e.printStackTrace();
-                actionButton.setText(R.string.app_action_install);
-            }
-
-            return view;
-        }
-    }
-
-    private RecentsAdapter mAdapter;
-
-    private LinearListView mLinearList;
+    private StickyHeadersItemDecoration mHeaderDecorator;
 
     private RecyclerView mRecyclerView;
 
-    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private CustomSwipeRefreshLayout mSwipeRefreshLayout;
+
+    private int mXTouchPos = 0;
+
+    private int mYTouchPos = 0;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        setupSwipeRefreshLayout();
-
-        /*mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        mRecyclerView = (RecyclerView) findViewById(R.id.recents_list);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(linearLayoutManager);
+        mAdapter = new RecentAppUpdateAdapter(HomeActivity.this, new ArrayList<AppUpdate>(),
+                this, this);
 
+        mHeaderDecorator = new StickyHeadersBuilder()
+                .setAdapter(mAdapter)
+                .setRecyclerView(mRecyclerView)
+                .setStickyHeadersAdapter(new HeaderAdapter(mAdapter))
+                .build();
 
+        mRecyclerView.setAdapter(mAdapter);
+        RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
+        mRecyclerView.setItemAnimator(itemAnimator);
+        mRecyclerView.addItemDecoration(mHeaderDecorator);
 
-        final RecentAppUpdateAdapter appAdapter = new RecentAppUpdateAdapter(this, getAppUpdate());
-        mRecyclerView.setAdapter(appAdapter);*/
-        mLinearList = (LinearListView) findViewById(R.id.recents);
-//        mAdapter = new RecentsAdapter(this, getAppUpdate());
-//        mLinearList.setAdapter(mAdapter);
-        mLinearList.setOnItemClickListener(this);
+        setupSwipeRefreshLayout();
+
+        ApiService.getRecents(new Callback() {
+            @Override
+            public void onFailure(final Request request, final IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(final Response response) throws IOException {
+                final Recents recents = new Gson()
+                        .fromJson(response.body().string(), Recents.class);
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mAdapter.updateList(recents.getApps());
+
+                        final int amount = mAdapter.getItemCount();
+                        mRecyclerView.animate();
+                    }
+                });
+            }
+        });
 
         refresh();
     }
 
-    public List<AppUpdate> getAppUpdate() {
-        final List<AppUpdate> updates = new ArrayList<AppUpdate>();
-        updates.addAll(Arrays.asList(
-                new AppUpdateBuilder().setName("Chrome Beta 39.0.2171.37").setIconUrl(
-                        "http://www.apkmirror.com/wp-content/themes/APKMirror/ap_resize/ap_resize.php?src=http%3A%2F%2Fwww.apkmirror.com%2Fwp-content%2Fuploads%2F2014%2F10%2F54483b41e1242.png")
-                        .setPublisher("Google Inc.").setPackageName("com.chrome.beta")
-                        .setVersion(2171037).createAppUpdate(),
-                new AppUpdateBuilder().setName("Android Wear 1.0.2.1534065").setIconUrl(
-                        "http://www.apkmirror.com/wp-content/themes/APKMirror/ap_resize/ap_resize.php?src=http%3A%2F%2Fwww.apkmirror.com%2Fwp-content%2Fuploads%2F2014%2F10%2F5449802075ec4.png")
-                        .setPublisher("Google Inc.")
-                        .setPackageName("com.google.android.wearable.app").setVersion(201534065)
-                        .createAppUpdate(),
-                new AppUpdateBuilder().setName("Calendar 201404014").setIconUrl(
-                        "http://www.apkmirror.com/wp-content/themes/APKMirror/ap_resize/ap_resize.php?src=http%3A%2F%2Fwww.apkmirror.com%2Fwp-content%2Fuploads%2F2014%2F10%2F542d25925355a.png")
-                        .setPublisher("Amazon Mobile LLC")
-                        .setPackageName("com.google.android.calendar").setVersion(201404015)
-                        .createAppUpdate()
-        ));
-        return updates;
-    }
-
     @Override
-    public void onItemClick(final LinearListView linearListView, final View view,
-            final int position, final long l) {
-        final AppUpdate appUpdate = (AppUpdate) mAdapter.getItem(position);
-        final ImageView icon = (ImageView) view.findViewById(R.id.icon);
+    public void onClick(final View view) {
+        int position = mRecyclerView.getChildPosition(view);
+        final AppUpdate appUpdate = mAdapter.getItem(position);
+        final View icon = view.findViewById(R.id.recents_app_icon);
+        final View name = view.findViewById(R.id.recents_app_name);
+        final View publisher = view.findViewById(R.id.recents_app_publisher);
+        final View card = findViewById(R.id.card_view_animation_hack);
 
         final int[] xy = new int[2];
         view.getLocationOnScreen(xy);
         final Intent intent = DetailActivity
-                .getInstance(HomeActivity.this, appUpdate, xy[0], xy[1]);
-
-        //ApiService.getRecents(responseCallback);
+                .getInstance(HomeActivity.this, appUpdate, mXTouchPos, xy[1] + mYTouchPos);
 
         Bundle bundle = Bundle.EMPTY;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(
-                    HomeActivity.this, icon,
-                    "testTransition");
+            ActivityOptions options = ActivityOptions
+                    .makeSceneTransitionAnimation(HomeActivity.this,
+                            Pair.create(icon, "iconTransition"),
+                            Pair.create(card, "cardTransition"),
+                            Pair.create(publisher, "publisherTransition"),
+                            Pair.create(name, "nameTransition"));
+
             bundle = options.toBundle();
         }
         startActivity(intent, bundle);
+    }
+
+    @Override
+    public boolean onTouch(final View v, final MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            mXTouchPos = (int) event.getX();
+            mYTouchPos = (int) event.getY();
+        }
+        return false;
     }
 
     private void refresh() {
@@ -193,8 +153,8 @@ public class HomeActivity extends BaseActivity implements LinearListView.OnItemC
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        mAdapter = new RecentsAdapter(HomeActivity.this, recents.getApps());
-                        mLinearList.setAdapter(mAdapter);
+                        mAdapter.updateList(recents.getApps());
+                        mRecyclerView.animate();
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
                 });
@@ -203,8 +163,10 @@ public class HomeActivity extends BaseActivity implements LinearListView.OnItemC
     }
 
     private void setupSwipeRefreshLayout() {
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(
+        mSwipeRefreshLayout = (CustomSwipeRefreshLayout) findViewById(
                 R.id.swipeRefreshLayout);
+
+        mSwipeRefreshLayout.setRecyclerView(mRecyclerView);
 
         if (mSwipeRefreshLayout != null) {
             mSwipeRefreshLayout.setColorSchemeResources(

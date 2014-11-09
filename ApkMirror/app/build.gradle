@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 21
-    buildToolsVersion "20.0.0"
+    buildToolsVersion "21.1.0"
 
     defaultConfig {
         applicationId "com.pascalwelsch.apkmirror"
@@ -29,5 +29,6 @@ dependencies {
     compile 'com.squareup.okhttp:okhttp:2.0.0+'
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.0.0+'
     compile 'com.squareup.picasso:picasso:2.3.4'
+    // compile 'com.eowise:recyclerview-stickyheaders:0.4.3'
     compile fileTree(dir: 'libs', include: ['*.jar'])
 }

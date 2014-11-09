@@ -17,11 +17,13 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.graphics.Palette;
+import android.transition.Explode;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -44,7 +46,11 @@ public class DetailActivity extends BaseActivity {
 
         private AppUpdate mApp;
 
+        private TextView mAppName;
+
         private Button mDownloadButton;
+
+        private Button mGetItOnPlayButton;
 
         private RelativeLayout mHeaderView;
 
@@ -76,6 +82,9 @@ public class DetailActivity extends BaseActivity {
                     //Download
                     download();
                     break;
+                case R.id.detail_app_play_store:
+                    openPlayStore();
+                    break;
             }
         }
 
@@ -95,8 +104,9 @@ public class DetailActivity extends BaseActivity {
             mIcon = (ImageView) rootView.findViewById(R.id.icon);
             mHeaderView = (RelativeLayout) rootView.findViewById(R.id.header_layout);
 
-            ((TextView) rootView.findViewById(R.id.detail_app_name))
-                    .setText("" + mApp.getName());
+            mAppName = (TextView) rootView.findViewById(R.id.detail_app_name);
+            mAppName.setText("" + mApp.getName());
+
             ((TextView) rootView.findViewById(R.id.detail_app_file_name)).setText(
                     "" + mApp.getFilename());
             ((TextView) rootView.findViewById(R.id.detail_app_version)).setText(
@@ -112,8 +122,18 @@ public class DetailActivity extends BaseActivity {
             ((TextView) rootView.findViewById(R.id.detail_app_publisher)).setText(
                     "" + mApp.getPublisher());
 
+            mGetItOnPlayButton = (Button) rootView.findViewById(R.id.detail_app_play_store);
+            if (mApp.getListingUrl() != null) {
+                mGetItOnPlayButton.setVisibility(View.VISIBLE);
+                mGetItOnPlayButton.setOnClickListener(this);
+            }
+
             mDownloadButton = (Button) rootView.findViewById(R.id.detail_app_download_button);
             mDownloadButton.setOnClickListener(this);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                getActivity().getWindow().setExitTransition(new Explode());
+            }
 
             return rootView;
         }
@@ -122,7 +142,7 @@ public class DetailActivity extends BaseActivity {
         public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
             Picasso.with(getActivity()).load(mApp.getIconUrl()).into(mIcon);
-            setPalette();
+            makeSexyMaterialAnimations();
         }
 
         private void download() {
@@ -148,7 +168,7 @@ public class DetailActivity extends BaseActivity {
         }
 
         @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-        private void setPalette() {
+        private void makeSexyMaterialAnimations() {
             final Bitmap bitmap = ((BitmapDrawable) mIcon.getDrawable()).getBitmap();
 
             Palette.generateAsync(bitmap, new Palette.PaletteAsyncListener() {
@@ -156,17 +176,18 @@ public class DetailActivity extends BaseActivity {
                 public void onGenerated(Palette palette) {
                     int rgb = palette.getDarkVibrantColor(R.color.background_material_light);
                     mHeaderView.setBackgroundColor(rgb);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        Display mdisp = getActivity().getWindowManager().getDefaultDisplay();
-                        Point mdispSize = new Point();
+
+                    mAppName.setTextColor(
+                            palette.getLightMutedColor(R.color.bright_foreground_material_light));
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && mHeaderView
+                            .isAttachedToWindow()) {
+
+                        final Display mdisp = getActivity().getWindowManager().getDefaultDisplay();
+                        final Point mdispSize = new Point();
                         mdisp.getSize(mdispSize);
-                        int maxX = mdispSize.x;
-                        int maxY = mdispSize.y;
-
-                        int dx = Math.abs(maxX - mXPos);
-                        int dy = Math.abs(maxY - mYPos);
-
-                        final int endAnim = (int) Math.sqrt((dx * dx) + (dy * dy));
+                        final int maxX = mdispSize.x;
+                        final int maxY = mdispSize.y;
+                        final int endAnim = Math.max(maxX, maxY);
                         ViewAnimationUtils.createCircularReveal(mHeaderView,
                                 mXPos,
                                 mYPos,
@@ -177,6 +198,16 @@ public class DetailActivity extends BaseActivity {
                     }
                 }
             });
+        }
+
+        private void openPlayStore() {
+            final String appPackageName = mApp.getPackageName();
+            try {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri
+                        .parse("market://details?id=" + appPackageName)));
+            } catch (android.content.ActivityNotFoundException anfe) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(mApp.getListingUrl())));
+            }
         }
     }
 

@@ -25,7 +25,7 @@
                     android:layout_height="128dp"
                     android:layout_marginBottom="20dp"
                     android:layout_marginTop="20dp"
-                    android:transitionName="testTransition"
+                    android:transitionName="iconTransition"
                     tools:src="@drawable/ic_launcher" />
 
                 <TextView
@@ -37,6 +37,7 @@
                     android:paddingTop="20dp"
                     android:textColor="#000000"
                     android:textSize="25sp"
+                    android:transitionName="nameTransition"
                     tools:text="GMAil" />
 
                 <TextView
@@ -46,127 +47,155 @@
                     android:layout_alignLeft="@+id/detail_app_name"
                     android:layout_alignStart="@+id/detail_app_name"
                     android:layout_below="@+id/detail_app_name"
+                    android:transitionName="publisherTransition"
                     tools:text="Google inc" />
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_width="fill_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
                 android:layout_below="@+id/header_layout">
 
-                <TextView
-                    android:id="@+id/detail_app_file_name_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:padding="5dp"
-                    android:text="File Name:" />
-
-                <TextView
-                    android:id="@+id/detail_app_file_name"
-                    android:layout_width="wrap_content"
-
-                    android:layout_height="wrap_content"
-                    android:layout_toEndOf="@+id/detail_app_file_name_label"
-                    android:layout_toRightOf="@+id/detail_app_file_name_label"
-                    android:padding="5dp"
-                    tools:text="bla.apk" />
-
-                <TextView
-                    android:id="@+id/detail_app_version_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/detail_app_file_name_label"
-                    android:padding="5dp"
-                    android:text="Version:" />
-
-                <TextView
-                    android:id="@+id/detail_app_version"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/detail_app_file_name_label"
-                    android:layout_toEndOf="@+id/detail_app_version_label"
-                    android:layout_toRightOf="@+id/detail_app_version_label"
-                    android:padding="5dp"
-                    tools:text="1.0" />
-
-                <TextView
-                    android:id="@+id/detail_app_uploaded_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/detail_app_version_label"
-                    android:padding="5dp"
-                    android:text="Uploaded:" />
-
-                <TextView
-                    android:id="@+id/detail_app_uploaded"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/detail_app_version_label"
-                    android:layout_toEndOf="@+id/detail_app_file_name_label"
-                    android:layout_toRightOf="@+id/detail_app_file_name_label"
-                    android:padding="5dp" />
-
-                <TextView
-                    android:id="@+id/detail_app_file_size_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/detail_app_uploaded_label"
-                    android:padding="5dp"
-                    android:text="File Size:" />
-
-                <TextView
-                    android:id="@+id/detail_app_file_size"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/detail_app_uploaded_label"
-                    android:layout_toEndOf="@+id/detail_app_file_size_label"
-                    android:layout_toRightOf="@+id/detail_app_file_size_label"
-                    android:padding="5dp" />
-
-                <TextView
-                    android:id="@+id/detail_app_minimal_version_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/detail_app_file_size_label"
-                    android:padding="5dp"
-                    android:text="Minimal Version:" />
-
-
-                <TextView
-                    android:id="@+id/detail_app_minimal_version"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/detail_app_file_size_label"
-                    android:layout_toEndOf="@+id/detail_app_minimal_version_label"
-                    android:layout_toRightOf="@+id/detail_app_minimal_version_label"
-                    android:padding="5dp" />
-
-                <TextView
-                    android:id="@+id/detail_app_downloads_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/detail_app_minimal_version_label"
-                    android:padding="5dp"
-                    android:text="Downloads:" />
-
-                <TextView
-                    android:id="@+id/detail_app_downloads"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/detail_app_minimal_version_label"
-                    android:layout_toEndOf="@+id/detail_app_downloads_label"
-                    android:layout_toRightOf="@+id/detail_app_downloads_label"
-                    android:padding="5dp" />
-
-
-                <Button
-                    android:id="@+id/detail_app_download_button"
+                <android.support.v7.widget.CardView
+                    android:id="@+id/detail_app_bottom_layout"
+                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/detail_app_downloads_label"
-                    android:text="DOWNLOAD" />
+                    android:layout_gravity="center"
+                    android:layout_margin="5dp"
+                    android:elevation="3dp"
+                    android:transitionName="cardTransition"
+                    card_view:cardCornerRadius="5dp">
 
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/detail_app_file_name_label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentTop="true"
+                            android:maxLines="1"
+                            android:padding="5dp"
+                            android:text="File Name:" />
+
+                        <TextView
+                            android:id="@+id/detail_app_file_name"
+                            android:layout_width="wrap_content"
+
+                            android:layout_height="wrap_content"
+                            android:layout_toEndOf="@+id/detail_app_file_name_label"
+                            android:layout_toRightOf="@+id/detail_app_file_name_label"
+                            android:padding="5dp"
+                            tools:text="bla.apk" />
+
+                        <TextView
+                            android:id="@+id/detail_app_version_label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/detail_app_file_name_label"
+                            android:padding="5dp"
+                            android:text="Version:" />
+
+                        <TextView
+                            android:id="@+id/detail_app_version"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/detail_app_file_name_label"
+                            android:layout_toEndOf="@+id/detail_app_version_label"
+                            android:layout_toRightOf="@+id/detail_app_version_label"
+                            android:padding="5dp"
+                            tools:text="1.0" />
+
+                        <TextView
+                            android:id="@+id/detail_app_uploaded_label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/detail_app_version_label"
+                            android:padding="5dp"
+                            android:text="Uploaded:" />
+
+                        <TextView
+                            android:id="@+id/detail_app_uploaded"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/detail_app_version_label"
+                            android:layout_toEndOf="@+id/detail_app_file_name_label"
+                            android:layout_toRightOf="@+id/detail_app_file_name_label"
+                            android:padding="5dp" />
+
+                        <TextView
+                            android:id="@+id/detail_app_file_size_label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/detail_app_uploaded_label"
+                            android:padding="5dp"
+                            android:text="File Size:" />
+
+                        <TextView
+                            android:id="@+id/detail_app_file_size"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/detail_app_uploaded_label"
+                            android:layout_toEndOf="@+id/detail_app_file_size_label"
+                            android:layout_toRightOf="@+id/detail_app_file_size_label"
+                            android:padding="5dp" />
+
+                        <TextView
+                            android:id="@+id/detail_app_minimal_version_label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/detail_app_file_size_label"
+                            android:padding="5dp"
+                            android:text="Minimal Version:" />
+
+
+                        <TextView
+                            android:id="@+id/detail_app_minimal_version"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/detail_app_file_size_label"
+                            android:layout_toEndOf="@+id/detail_app_minimal_version_label"
+                            android:layout_toRightOf="@+id/detail_app_minimal_version_label"
+                            android:padding="5dp" />
+
+                        <TextView
+                            android:id="@+id/detail_app_downloads_label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/detail_app_minimal_version_label"
+                            android:padding="5dp"
+                            android:text="Downloads:" />
+
+                        <TextView
+                            android:id="@+id/detail_app_downloads"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/detail_app_minimal_version_label"
+                            android:layout_toEndOf="@+id/detail_app_downloads_label"
+                            android:layout_toRightOf="@+id/detail_app_downloads_label"
+                            android:padding="5dp" />
+
+
+                        <Button
+                            android:id="@+id/detail_app_download_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/detail_app_downloads_label"
+                            android:text="DOWNLOAD" />
+
+                        <Button
+                            android:id="@+id/detail_app_play_store"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_below="@+id/detail_app_downloads_label"
+                            android:background="@drawable/get_it_on_play_button" />
+                    </RelativeLayout>
+
+                </android.support.v7.widget.CardView>
             </RelativeLayout>
         </RelativeLayout>
     </ScrollView>

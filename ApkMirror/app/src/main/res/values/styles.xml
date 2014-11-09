@@ -13,4 +13,7 @@
         <item name="android:windowNoTitle">true</item>
     </style>
 
+    <style name="AppName" parent="TextAppearance.AppCompat.Title">
+    </style>
+
 </resources>

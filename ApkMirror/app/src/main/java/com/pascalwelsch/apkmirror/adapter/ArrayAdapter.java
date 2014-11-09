@@ -92,4 +92,9 @@ public abstract class ArrayAdapter<T, VH extends RecyclerView.ViewHolder>
         Collections.sort(mObjects, comparator);
         notifyItemRangeChanged(0, getItemCount());
     }
+
+    public void updateList(final List<T> objects) {
+        mObjects = objects;
+        notifyDataSetChanged();
+    }
 }

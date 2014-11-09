@@ -15,4 +15,10 @@
     <color name="color_swipetorefresh_2">#C25838</color>
     <color name="color_swipetorefresh_3">#FFAC92</color>
 
+    <color name="highlights">#18ACC2</color>
+    <color name="text_dark">#4D4D4D</color>
+    <color name="text_light">#999999</color>
+    <color name="item_unselected">#C25838</color>
+
+
 </resources>
