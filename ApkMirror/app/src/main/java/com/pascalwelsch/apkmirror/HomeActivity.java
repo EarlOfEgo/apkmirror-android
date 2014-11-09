@@ -2,7 +2,10 @@ package com.pascalwelsch.apkmirror;
 
 import com.google.gson.Gson;
 
+import com.pascalwelsch.apkmirror.adapter.HeaderAdapter;
 import com.pascalwelsch.apkmirror.adapter.RecentAppUpdateAdapter;
+import com.pascalwelsch.apkmirror.adapter.stickyheader.StickyHeadersBuilder;
+import com.pascalwelsch.apkmirror.adapter.stickyheader.StickyHeadersItemDecoration;
 import com.pascalwelsch.apkmirror.model.AppUpdate;
 import com.pascalwelsch.apkmirror.model.Recents;
 import com.pascalwelsch.apkmirror.services.ApiService;
@@ -35,6 +38,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
 
     private RecentAppUpdateAdapter mAdapter;
 
+    private StickyHeadersItemDecoration mHeaderDecorator;
+
     private RecyclerView mRecyclerView;
 
     private CustomSwipeRefreshLayout mSwipeRefreshLayout;
@@ -55,9 +60,17 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mAdapter = new RecentAppUpdateAdapter(HomeActivity.this, new ArrayList<AppUpdate>(),
                 this, this);
+
+        mHeaderDecorator = new StickyHeadersBuilder()
+                .setAdapter(mAdapter)
+                .setRecyclerView(mRecyclerView)
+                .setStickyHeadersAdapter(new HeaderAdapter(mAdapter))
+                .build();
+
         mRecyclerView.setAdapter(mAdapter);
         RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
         mRecyclerView.setItemAnimator(itemAnimator);
+        mRecyclerView.addItemDecoration(mHeaderDecorator);
 
         setupSwipeRefreshLayout();
 
@@ -153,7 +166,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         mSwipeRefreshLayout = (CustomSwipeRefreshLayout) findViewById(
                 R.id.swipeRefreshLayout);
 
-        mSwipeRefreshLayout.setScrollView(findViewById(R.id.recents_scroll_view));
+        mSwipeRefreshLayout.setRecyclerView(mRecyclerView);
 
         if (mSwipeRefreshLayout != null) {
             mSwipeRefreshLayout.setColorSchemeResources(

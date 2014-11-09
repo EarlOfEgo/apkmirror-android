@@ -27,7 +27,7 @@ public class RecentAppUpdateAdapter
 
     public class RecentAppsViewHolder extends RecyclerView.ViewHolder {
 
-        private final Button mActionButton;
+        private final TextView mActionInfo;
 
         private final ImageView mAppIcon;
 
@@ -40,7 +40,7 @@ public class RecentAppUpdateAdapter
             mAppName = (TextView) itemView.findViewById(R.id.recents_app_name);
             mAppIcon = (ImageView) itemView.findViewById(R.id.recents_app_icon);
             mPublisherName = (TextView) itemView.findViewById(R.id.recents_app_publisher);
-            mActionButton = (Button) itemView.findViewById(R.id.recents_app_action_button);
+            mActionInfo = (TextView) itemView.findViewById(R.id.action_info);
         }
     }
 
@@ -60,13 +60,14 @@ public class RecentAppUpdateAdapter
         mOnTouchListener = onTouchListener;
         mInflater = LayoutInflater.from(context);
         mContext = context;
+        setHasStableIds(true);
     }
 
     @Override
     public void onBindViewHolder(final RecentAppsViewHolder viewHolder, final int position) {
         final AppUpdate appUpdate = getItem(position);
-        viewHolder.mAppName.setText("" + appUpdate.getName());
-        viewHolder.mPublisherName.setText("" + appUpdate.getName());
+        viewHolder.mAppName.setText(appUpdate.getName());
+        viewHolder.mPublisherName.setText(appUpdate.getPublisher());
         Picasso.with(mContext).load(appUpdate.getIconUrl()).into(viewHolder.mAppIcon);
         final Resources resources = mContext.getResources();
 
@@ -76,15 +77,15 @@ public class RecentAppUpdateAdapter
             int installedVersion = pInfo.versionCode;
             int updateVersion = appUpdate.getVersion();
             if (installedVersion < updateVersion) {
-                viewHolder.mActionButton.setText(R.string.app_action_update);
-                viewHolder.mActionButton.setTextColor(resources.getColor(R.color.highlights));
+                viewHolder.mActionInfo.setText(R.string.app_action_update);
+                viewHolder.mActionInfo.setTextColor(resources.getColor(R.color.highlights));
             } else {
-                viewHolder.mActionButton.setText(R.string.app_action_open);
-                viewHolder.mActionButton.setTextColor(resources.getColor(R.color.text_light));
+                viewHolder.mActionInfo.setText(R.string.app_action_open);
+                viewHolder.mActionInfo.setTextColor(resources.getColor(R.color.text_light));
             }
         } catch (PackageManager.NameNotFoundException e) {
-            viewHolder.mActionButton.setText(R.string.app_action_install);
-            viewHolder.mActionButton.setTextColor(resources.getColor(R.color.highlights));
+            viewHolder.mActionInfo.setText(R.string.app_action_install);
+            viewHolder.mActionInfo.setTextColor(resources.getColor(R.color.highlights));
         }
 
     }

@@ -13,9 +13,7 @@
         <item name="android:windowNoTitle">true</item>
     </style>
 
-    <style name="AppName">
-        <item name="android:textColor">@color/highlights</item>
-        <item name="android:textSize">20sp</item>
+    <style name="AppName" parent="TextAppearance.AppCompat.Title">
     </style>
 
 </resources>
