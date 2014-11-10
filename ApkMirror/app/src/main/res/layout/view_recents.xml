@@ -10,6 +10,7 @@
     android:elevation="8dp"
     android:foreground="?android:attr/selectableItemBackground"
     app:cardCornerRadius="2dp"
+    app:cardUseCompatPadding="true"
     app:contentPadding="4dp"
     tools:layout_margin="8dp">
 
