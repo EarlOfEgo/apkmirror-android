@@ -3,17 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginBottom="5dp"
-    android:layout_marginEnd="10dp"
-    android:layout_marginLeft="10dp"
-    android:layout_marginRight="10dp"
-    android:layout_marginStart="10dp"
-    android:layout_marginTop="5dp"
-    android:elevation="3dp"
+    android:layout_height="90dp"
+    android:layout_marginLeft="4dp"
+    android:layout_marginRight="4dp"
+    android:layout_marginTop="4dp"
+    android:elevation="8dp"
     android:foreground="?android:attr/selectableItemBackground"
-    android:padding="10dp"
-    app:cardCornerRadius="4dp">
+    app:cardCornerRadius="2dp"
+    app:contentPadding="4dp"
+    tools:layout_margin="8dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -21,54 +19,60 @@
 
         <ImageView
             android:id="@+id/recents_app_icon"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_margin="10dp"
+            android:layout_width="74dp"
+            android:layout_height="74dp"
+            android:layout_centerVertical="true"
+            android:padding="4dp"
+            android:scaleType="centerCrop"
             android:transitionName="iconTransition"
-            tools:src="@color/logo_orange_dark" />
+            tools:src="@drawable/ic_launcher" />
 
-
-        <TextView
-            android:id="@+id/recents_app_name"
-            style="@style/AppName"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/recents_app_icon"
+            android:layout_marginLeft="4dp"
+            android:layout_marginTop="4dp"
             android:layout_toEndOf="@+id/recents_app_icon"
             android:layout_toRightOf="@+id/recents_app_icon"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:transitionName="nameTransition"
-            tools:text="Google Express v2.3 (October 16, 2014) blabla blubb with a very long name" />
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/recents_app_name"
+                style="@style/TextAppearance.AppCompat.Subhead"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/recents_app_icon"
+                android:layout_toRightOf="@+id/recents_app_icon"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:transitionName="nameTransition"
+                tools:text="Google Express v2.3 (October 16, 2014) blabla blubb with a very long name" />
+
+            <TextView
+                android:id="@+id/recents_app_publisher"
+                style="@style/TextAppearance.AppCompat.Caption"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/recents_app_name"
+                android:layout_toEndOf="@+id/recents_app_icon"
+                android:layout_toRightOf="@+id/recents_app_icon"
+                android:maxLines="1"
+                android:transitionName="publisherTransition"
+                tools:text="By Google Inc." />
+        </LinearLayout>
 
         <TextView
-            android:id="@+id/recents_app_publisher"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/recents_app_name"
-            android:layout_toEndOf="@+id/recents_app_icon"
-            android:layout_toRightOf="@+id/recents_app_icon"
-            android:textColor="@color/text_light"
-            android:transitionName="publisherTransition"
-            tools:text="By Google Inc." />
-
-        <Button
-            android:id="@+id/recents_app_action_button"
-            style="@style/Base.TextAppearance.AppCompat.Button"
+            android:id="@+id/action_info"
+            style="@style/Base.TextAppearance.AppCompat.Caption"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:background="?attr/selectableItemBackground"
-            android:paddingEnd="5dp"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:paddingStart="5dp"
-            android:paddingTop="15dp"
+            android:padding="4dp"
             android:text="@string/app_action_install"
             android:textAllCaps="true"
             tools:textColor="@color/highlights" />

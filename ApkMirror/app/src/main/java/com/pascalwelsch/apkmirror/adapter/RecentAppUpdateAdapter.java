@@ -11,7 +11,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,7 +24,7 @@ public class RecentAppUpdateAdapter
 
     public class RecentAppsViewHolder extends RecyclerView.ViewHolder {
 
-        private final Button mActionButton;
+        private final TextView mActionInfo;
 
         private final ImageView mAppIcon;
 
@@ -33,12 +32,13 @@ public class RecentAppUpdateAdapter
 
         private final TextView mPublisherName;
 
+
         public RecentAppsViewHolder(final View itemView) {
             super(itemView);
             mAppName = (TextView) itemView.findViewById(R.id.recents_app_name);
             mAppIcon = (ImageView) itemView.findViewById(R.id.recents_app_icon);
             mPublisherName = (TextView) itemView.findViewById(R.id.recents_app_publisher);
-            mActionButton = (Button) itemView.findViewById(R.id.recents_app_action_button);
+            mActionInfo = (TextView) itemView.findViewById(R.id.action_info);
         }
     }
 
@@ -58,6 +58,7 @@ public class RecentAppUpdateAdapter
         mOnTouchListener = onTouchListener;
         mInflater = LayoutInflater.from(context);
         mContext = context;
+        setHasStableIds(true);
     }
 
     @Override
@@ -67,8 +68,8 @@ public class RecentAppUpdateAdapter
         viewHolder.mPublisherName.setText("" + appUpdate.getPublisher());
         Picasso.with(mContext).load(appUpdate.getIconUrl()).into(viewHolder.mAppIcon);
 
-        Formater.setButtonText(mContext, viewHolder.mActionButton, appUpdate);
-        Formater.setButtonTextColor(mContext, viewHolder.mActionButton, appUpdate);
+        Formater.setButtonText(mContext, viewHolder.mActionInfo, appUpdate);
+        Formater.setButtonTextColor(mContext, viewHolder.mActionInfo, appUpdate);
     }
 
     @Override

@@ -7,8 +7,7 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
-import android.view.View;
-import android.widget.Button;
+import android.widget.TextView;
 
 /**
  * ApkMirror
@@ -30,8 +29,8 @@ public class Formater {
         return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
     }
 
-    public static void setButtonText(final Context context, final Button button, final AppUpdate appUpdate) {
-        final Resources resources = context.getResources();
+    public static void setButtonText(final Context context, final TextView button,
+            final AppUpdate appUpdate) {
         try {
             PackageInfo pInfo = context.getPackageManager()
                     .getPackageInfo(appUpdate.getPackageName(), 0);
@@ -47,7 +46,8 @@ public class Formater {
         }
     }
 
-    public static void setButtonTextColor(final Context context, final Button button, final AppUpdate appUpdate) {
+    public static void setButtonTextColor(final Context context, final TextView button,
+            final AppUpdate appUpdate) {
         final Resources resources = context.getResources();
         try {
             PackageInfo pInfo = context.getPackageManager()
