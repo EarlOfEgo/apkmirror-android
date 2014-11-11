@@ -16,4 +16,8 @@
     <style name="AppName" parent="TextAppearance.AppCompat.Title">
     </style>
 
+    <style name="DownloadButton" parent="@style/Base.TextAppearance.AppCompat.Button">
+        <item name="android:textColor">#ffffff</item>
+    </style>
+
 </resources>

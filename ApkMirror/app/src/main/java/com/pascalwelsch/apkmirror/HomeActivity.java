@@ -19,7 +19,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
@@ -68,8 +67,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                 .build();
 
         mRecyclerView.setAdapter(mAdapter);
-        RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
-        mRecyclerView.setItemAnimator(itemAnimator);
         mRecyclerView.addItemDecoration(mHeaderDecorator);
 
         setupSwipeRefreshLayout();
@@ -107,7 +104,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         final View icon = view.findViewById(R.id.recents_app_icon);
         final View name = view.findViewById(R.id.recents_app_name);
         final View publisher = view.findViewById(R.id.recents_app_publisher);
-        final View card = findViewById(R.id.card_view_animation_hack);
+//        final View card = findViewById(R.id.card_view_animation_hack);
 
         final int[] xy = new int[2];
         view.getLocationOnScreen(xy);
@@ -119,7 +116,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
             ActivityOptions options = ActivityOptions
                     .makeSceneTransitionAnimation(HomeActivity.this,
                             Pair.create(icon, "iconTransition"),
-                            Pair.create(card, "cardTransition"),
+//                            Pair.create(card, "cardTransition"),
                             Pair.create(publisher, "publisherTransition"),
                             Pair.create(name, "nameTransition"));
 

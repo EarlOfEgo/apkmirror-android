@@ -4,14 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="90dp"
-    android:elevation="8dp"
-    tools:layout_margin="8dp"
-    app:cardUseCompatPadding="true"
     android:layout_marginLeft="4dp"
     android:layout_marginRight="4dp"
+    android:layout_marginTop="4dp"
+    android:elevation="8dp"
     android:foreground="?android:attr/selectableItemBackground"
+    app:cardCornerRadius="2dp"
+    app:cardUseCompatPadding="true"
     app:contentPadding="4dp"
-    app:cardCornerRadius="2dp">
+    tools:layout_margin="8dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -21,23 +22,23 @@
             android:id="@+id/recents_app_icon"
             android:layout_width="74dp"
             android:layout_height="74dp"
+            android:layout_centerVertical="true"
             android:padding="4dp"
             android:scaleType="centerCrop"
-            android:layout_centerVertical="true"
             android:transitionName="iconTransition"
             tools:src="@drawable/ic_launcher" />
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:orientation="vertical"
             android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/recents_app_icon"
             android:layout_marginLeft="4dp"
             android:layout_marginTop="4dp"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
             android:layout_toEndOf="@+id/recents_app_icon"
-            android:layout_alignTop="@+id/recents_app_icon"
-            android:layout_toRightOf="@+id/recents_app_icon">
+            android:layout_toRightOf="@+id/recents_app_icon"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/recents_app_name"
@@ -57,9 +58,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/recents_app_name"
-                android:maxLines="1"
                 android:layout_toEndOf="@+id/recents_app_icon"
                 android:layout_toRightOf="@+id/recents_app_icon"
+                android:maxLines="1"
                 android:transitionName="publisherTransition"
                 tools:text="By Google Inc." />
         </LinearLayout>
@@ -69,13 +70,13 @@
             style="@style/Base.TextAppearance.AppCompat.Caption"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:padding="4dp"
             android:text="@string/app_action_install"
             android:textAllCaps="true"
-            tools:textColor="@color/highlights"
-            android:layout_alignParentBottom="true"
-            android:padding="4dp"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+            tools:textColor="@color/highlights" />
 
     </RelativeLayout>
 
