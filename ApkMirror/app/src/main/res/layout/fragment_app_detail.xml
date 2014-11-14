@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ScrollView
+    <com.nirhart.parallaxscroll.views.ParallaxScrollView
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+        android:layout_height="fill_parent"
+        app:parallax_factor="1.9">
 
         <RelativeLayout
             android:layout_width="fill_parent"
@@ -66,6 +68,12 @@
                     <RelativeLayout
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content">
+
+
+                        <ProgressBar
+                            android:id="@+id/detail_app_download_progressbar"
+                            android:layout_width="match_parent"
+                            android:layout_height="5dp" />
 
                         <Button
                             android:id="@+id/detail_app_download_button"
@@ -313,5 +321,5 @@
             </RelativeLayout>
 
         </RelativeLayout>
-    </ScrollView>
+    </com.nirhart.parallaxscroll.views.ParallaxScrollView>
 </RelativeLayout>

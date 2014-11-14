@@ -16,10 +16,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NavUtils;
 import android.support.v7.graphics.Palette;
 import android.transition.Explode;
 import android.view.Display;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
@@ -78,6 +80,7 @@ public class DetailActivity extends BaseActivity {
                 case R.id.detail_app_download_button:
                     //Download
                     download();
+                    mDownloadButton.setEnabled(false);
                     break;
 //                case R.id.detail_app_play_store:
 //                    openPlayStore();
@@ -236,6 +239,8 @@ public class DetailActivity extends BaseActivity {
                     .replace(R.id.test_fragment, TestFragment.newInstance(app, xPos, yPos))
                     .commit();
         }
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     public static Intent getInstance(final Context context, final AppUpdate appUpdate,
@@ -245,5 +250,15 @@ public class DetailActivity extends BaseActivity {
         intent.putExtra(INTENT_X_POS, xPosition);
         intent.putExtra(INTENT_Y_POS, yPosition);
         return intent;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
