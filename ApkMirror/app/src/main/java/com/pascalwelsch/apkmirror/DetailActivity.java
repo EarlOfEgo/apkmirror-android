@@ -99,7 +99,7 @@ public class DetailActivity extends BaseActivity {
         @Override
         public View onCreateView(final LayoutInflater inflater, @Nullable final ViewGroup container,
                 @Nullable final Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_app_detail, null);
+            View rootView = inflater.inflate(R.layout.fragment_detail, null);
 
             mIcon = (ImageView) rootView.findViewById(R.id.icon);
             mHeaderView = rootView.findViewById(R.id.details_app_header);
@@ -232,7 +232,7 @@ public class DetailActivity extends BaseActivity {
         final AppUpdate app = getIntent().getExtras().getParcelable(INTENT_APP);
         final int xPos = getIntent().getExtras().getInt(INTENT_X_POS);
         final int yPos = getIntent().getExtras().getInt(INTENT_Y_POS);
-        setContentView(R.layout.activity_app_detail);
+        setContentView(R.layout.activity_detail);
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
