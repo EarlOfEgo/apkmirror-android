@@ -34,7 +34,7 @@ public class CustomSwipeRefreshLayout extends SwipeRefreshLayout {
                 final int pos = ((LinearLayoutManager) layoutManager)
                         .findFirstCompletelyVisibleItemPosition();
                 Log.v(TAG, "pos: " + pos);
-                return pos != 0;
+                return pos > 0;
             }
         }
         return super.canChildScrollUp();

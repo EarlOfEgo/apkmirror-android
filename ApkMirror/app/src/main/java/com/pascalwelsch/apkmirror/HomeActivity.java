@@ -6,6 +6,7 @@ import com.pascalwelsch.apkmirror.adapter.HeaderAdapter;
 import com.pascalwelsch.apkmirror.adapter.RecentAppUpdateAdapter;
 import com.pascalwelsch.apkmirror.adapter.stickyheader.StickyHeadersBuilder;
 import com.pascalwelsch.apkmirror.adapter.stickyheader.StickyHeadersItemDecoration;
+import com.pascalwelsch.apkmirror.detail.AppDetailActivity;
 import com.pascalwelsch.apkmirror.model.AppUpdate;
 import com.pascalwelsch.apkmirror.model.Recents;
 import com.pascalwelsch.apkmirror.services.ApiService;
@@ -108,8 +109,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
 
         final int[] xy = new int[2];
         view.getLocationOnScreen(xy);
-        final Intent intent = DetailActivity
-                .getInstance(HomeActivity.this, appUpdate, mXTouchPos, xy[1] + mYTouchPos);
+        final Intent intent = AppDetailActivity
+                .newInstance(HomeActivity.this, appUpdate, mXTouchPos, xy[1] + mYTouchPos);
 
         Bundle bundle = Bundle.EMPTY;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -139,7 +140,12 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         ApiService.getRecents(new Callback() {
             @Override
             public void onFailure(final Request request, final IOException e) {
-                mSwipeRefreshLayout.setRefreshing(false);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mSwipeRefreshLayout.setRefreshing(false);
+                    }
+                });
             }
 
             @Override
