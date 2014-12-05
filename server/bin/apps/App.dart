@@ -30,7 +30,7 @@ class App extends Object with Serializable {
         return version > other.version;
     }
 
-    String toString() => '$packageName $versionName';
+    String toString() => '$packageName $versionName ($version)';
 }
 
 main() { /*

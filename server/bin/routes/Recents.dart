@@ -5,7 +5,7 @@ import '../apps/App.dart';
 import 'dart:math' as math;
 import 'dart:convert';
 import 'dart:io';
-import 'package:xml/xml.dart';
+import 'package:xml/xml.dart' as xml;
 import 'package:html5lib/parser.dart' show parse;
 import 'package:html5lib/dom.dart';
 
@@ -36,12 +36,10 @@ class Recents {
             if (addedApp.isSameApp(app)) {
                 if (app.isNewerThan(addedApp)) {
                     apps.remove(addedApp);
-                    apps.add(app);
-                    replacedApp = true;
-                    break;
                 } else {
-                    // don't add
+                    replacedApp = true;
                 }
+                break;
             }
         }
         if (!replacedApp) {
@@ -67,20 +65,24 @@ class Recents {
             return parseResponseToString(response);
         }).then((String xmlData) {
             xmlData = removePiLine(xmlData);
-            XmlElement sitemapsOverview = XML.parse(xmlData);
-            XmlNode urlNode = sitemapsOverview.queryAll('loc').where((XmlNode element) {
-                return element.toString().contains(RECENT_URL);
-            }).first;
-            XmlNode lastMod = urlNode.parent.children.query('lastmod').first;
-            RegExp exp = new RegExp(r'>(.*)<\/');
-            Iterable<Match> matches = exp.allMatches(lastMod.toString());
-            String timestamp = matches.last.group(1);
+            xml.XmlDocument sitemapsOverview = xml.parse(xmlData);
+            var locs = sitemapsOverview.findAllElements('loc');
+            Iterable<xml.XmlNode> locs2 = locs.where((
+                xml.XmlNode element) {
+                var url = element.firstChild.text;
+                return url.contains(RECENT_URL);
+            });
+            var urlNode = locs2.first;
+            xml.XmlNode node = urlNode.parent;
+            String timestamp = urlNode.parent.document.findAllElements('lastmod').first.firstChild.text;
             DateTime date = DateTime.parse(timestamp);
             if (!date.isAfter(recentsChangedDate)) {
 
                 //cache hit
+                print('cache hit');
                 requestCompleter.complete(this);
             } else {
+                print('requesting new data');
                 recentsChangedDate = date;
                 Future<List<String>> recentRequest = new HttpClient().getUrl(Uri.parse(RECENT_URL))
                 .then((
@@ -91,9 +93,16 @@ class Recents {
                 .then((String xmlData) {
                     List<String> appLinks = new List();
                     xmlData = removePiLine(xmlData);
-                    XmlElement element = XML.parse(xmlData);
-                    var items = element.queryAll('url').queryAll('loc')
-                    .reversed.take(number * 2).forEach((XmlNode node) {
+                    xml.XmlDocument doc = xml.parse(xmlData);
+                    List<xml.XmlElement> locs = new List();
+                    doc.findAllElements('url').forEach(
+                            (xml.XmlElement element) => locs.addAll(element.findAllElements('loc'))
+                    );
+                    var reversed = locs.reversed;
+                    var count = number * 1.6;
+                    var xmlItems = reversed.take(count.round());
+                    var items = xmlItems
+                        ..forEach((xml.XmlNode node) {
                         String toParseLink = node.toString();
                         RegExp exp = new RegExp(r'<loc>(.*)<\/loc>');
                         Iterable<Match> matches = exp.allMatches(toParseLink);
@@ -102,6 +111,8 @@ class Recents {
                             appLinks.add(link);
                         }
                     });
+
+                    print('firing ${appLinks.length} Requests');
 
                     return new Future.value(appLinks);
                 });
@@ -144,7 +155,9 @@ class Recents {
                 print('Loaded ${apps.length} Recent Apps');
                 requestCompleter.complete(this);
             });
-        }).catchError(() {
+        }).catchError((ex, stack) {
+            print(ex);
+            print(stack);
             recentsChangedDate = new DateTime.fromMillisecondsSinceEpoch(0);
         });
 
@@ -170,6 +183,7 @@ App parseInfoHtml(String first) {
     String playStoreLink = element.getElementsByClassName('downloadButtons').first.getElementsByTagName('a').first.attributes.remove('href');
     String packageName = new RegExp(r'details\?id=(.*)').firstMatch(playStoreLink).group(1);
     String infos = element.text;
+    //print(infos);
     String version = new RegExp(r'Version: (.*)').allMatches(infos).last.group(1);
     int appVersion = int.parse(new RegExp(r'\((\d+)\)').allMatches(version).last.group(1));
     String versionName = new RegExp(r'(.*) \(').firstMatch(version).group(1);
@@ -185,9 +199,11 @@ App parseInfoHtml(String first) {
     int downloads = int.parse(new RegExp(r'Downloads: (.*)').allMatches(infos)
     .last.group(1).replaceAll(r',', ''));
     String uploader = new RegExp(r'Uploaded by: (.*)').allMatches(infos).last.group(1);
+    String publisher = new RegExp(r'By (.*)').allMatches(infos).last.group(1);
+    //print('publisher: $publisher');
 
     App app = new App(title, 1)
-        ..publisher = 'Google Inc.'
+        ..publisher = publisher
         ..filename = fileName
         ..minSdk = minSdkVersion
         ..uploaded = new DateTime.now().toIso8601String()
