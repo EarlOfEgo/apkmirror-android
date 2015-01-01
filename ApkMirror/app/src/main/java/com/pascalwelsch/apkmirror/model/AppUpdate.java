@@ -70,7 +70,6 @@ public class AppUpdate implements Parcelable {
     @SerializedName("versionName")
     private String mVersionName;
 
-
     public AppUpdate() {
     }
 
@@ -97,6 +96,7 @@ public class AppUpdate implements Parcelable {
         mVersion = version;
         mVersionName = versionName;
     }
+
 
     private AppUpdate(Parcel in) {
         this.mPublisher = in.readString();
@@ -126,80 +126,40 @@ public class AppUpdate implements Parcelable {
         return mDownloadUrl;
     }
 
-    public void setDownloadUrl(final String downloadUrl) {
-        mDownloadUrl = downloadUrl;
-    }
-
     public int getDownloads() {
         return mDownloads;
-    }
-
-    public void setDownloads(final int downloads) {
-        mDownloads = downloads;
     }
 
     public long getFileSize() {
         return mFileSize;
     }
 
-    public void setFileSize(final long filesize) {
-        mFileSize = filesize;
-    }
-
     public String getFilename() {
         return mFilename;
-    }
-
-    public void setFilename(final String filename) {
-        mFilename = filename;
     }
 
     public String getIconUrl() {
         return mIconUrl;
     }
 
-    public void setIconUrl(final String iconUrl) {
-        mIconUrl = iconUrl;
-    }
-
     public String getListingUrl() {
         return mListingUrl;
-    }
-
-    public void setListingUrl(final String listingUrl) {
-        mListingUrl = listingUrl;
     }
 
     public String getMd5() {
         return mMd5;
     }
 
-    public void setMd5(final String md5) {
-        mMd5 = md5;
-    }
-
     public int getMinSdk() {
         return mMinSdk;
-    }
-
-    public void setMinSdk(final int minSdk) {
-        mMinSdk = minSdk;
     }
 
     public String getName() {
         return mName;
     }
 
-    public void setName(final String name) {
-        mName = name;
-    }
-
     public String getPackageName() {
         return mPackageName;
-    }
-
-    public void setPackageName(final String packageName) {
-        mPackageName = packageName;
     }
 
     public String getPublisher() {
@@ -210,36 +170,80 @@ public class AppUpdate implements Parcelable {
         return mSha1;
     }
 
-    public void setSha1(final String sha1) {
-        mSha1 = sha1;
-    }
-
     public String getUploaded() {
         return mUploaded;
-    }
-
-    public void setUploaded(final String uploaded) {
-        mUploaded = uploaded;
     }
 
     public String getUploader() {
         return mUploader;
     }
 
-    public void setUploader(final String uploader) {
-        mUploader = uploader;
-    }
-
     public int getVersion() {
         return mVersion;
     }
 
-    public void setVersion(final int version) {
-        mVersion = version;
-    }
-
     public String getVersionName() {
         return mVersionName;
+    }
+
+    public void setDownloadUrl(final String downloadUrl) {
+        mDownloadUrl = downloadUrl;
+    }
+
+    public void setDownloads(final int downloads) {
+        mDownloads = downloads;
+    }
+
+    public void setFileSize(final long filesize) {
+        mFileSize = filesize;
+    }
+
+    public void setFilename(final String filename) {
+        mFilename = filename;
+    }
+
+    public void setIconUrl(final String iconUrl) {
+        mIconUrl = iconUrl;
+    }
+
+    public void setListingUrl(final String listingUrl) {
+        mListingUrl = listingUrl;
+    }
+
+    public void setMd5(final String md5) {
+        mMd5 = md5;
+    }
+
+    public void setMinSdk(final int minSdk) {
+        mMinSdk = minSdk;
+    }
+
+    public void setName(final String name) {
+        mName = name;
+    }
+
+    public void setPackageName(final String packageName) {
+        mPackageName = packageName;
+    }
+
+    public void setPublisher(final String publisher) {
+        mPublisher = publisher;
+    }
+
+    public void setSha1(final String sha1) {
+        mSha1 = sha1;
+    }
+
+    public void setUploaded(final String uploaded) {
+        mUploaded = uploaded;
+    }
+
+    public void setUploader(final String uploader) {
+        mUploader = uploader;
+    }
+
+    public void setVersion(final int version) {
+        mVersion = version;
     }
 
     public void setVersionName(final String versionName) {

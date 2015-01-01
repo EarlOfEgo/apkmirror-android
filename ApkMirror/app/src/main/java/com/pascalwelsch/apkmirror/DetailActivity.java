@@ -3,6 +3,7 @@ package com.pascalwelsch.apkmirror;
 import com.pascalwelsch.apkmirror.model.AppUpdate;
 import com.pascalwelsch.apkmirror.services.DownloadService;
 import com.pascalwelsch.apkmirror.utils.Formater;
+import com.squareup.okhttp.OkHttpClient;
 import com.squareup.picasso.Picasso;
 
 import android.annotation.TargetApi;
@@ -33,6 +34,8 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import javax.inject.Inject;
 
 /**
  * Created by pascalwelsch on 10/25/14.

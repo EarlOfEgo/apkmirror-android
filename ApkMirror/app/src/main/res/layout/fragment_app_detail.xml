@@ -30,18 +30,48 @@
                 android:layout_width="match_parent"
                 android:layout_below="@id/details_app_blurry_image"
                 android:background="#2378e0"
-                android:paddingLeft="90dp"
-                android:layout_height="170dp">
+                android:layout_height="140dp">
 
-                <TextView
-                    android:id="@+id/detail_app_name"
-                    android:singleLine="true"
-                    android:ellipsize="end"
-                    android:layout_width="match_parent"
+                <RelativeLayout
+                    android:layout_width="wrap_content"
                     android:padding="8dp"
-                    style="@style/Base.TextAppearance.AppCompat.Title.Inverse"
-                    android:text="AppName"
-                    android:layout_height="wrap_content" />
+                    android:id="@+id/detail_app_info_primary"
+                    android:layout_marginLeft="90dp"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/detail_app_name"
+                        android:singleLine="true"
+                        android:ellipsize="end"
+                        android:layout_width="match_parent"
+                        style="@style/Base.TextAppearance.AppCompat.Title.Inverse"
+                        android:text="AppName"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/detail_app_publisher"
+                        android:singleLine="true"
+                        android:ellipsize="end"
+                        android:layout_width="match_parent"
+                        android:layout_below="@+id/detail_app_name"
+                        style="@style/Base.TextAppearance.AppCompat.Subhead.Inverse"
+                        android:text="Google Inc."
+                        android:layout_height="wrap_content" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:orientation="vertical"
+                    android:layout_below="@+id/detail_app_info_primary"
+                    android:layout_height="match_parent">
+
+                    <include layout="@layout/view_app_detail_info_installing" />
+
+                    <include
+                        layout="@layout/view_app_detail_info_uninstalled"
+                        android:visibility="gone" />
+                </RelativeLayout>
 
             </RelativeLayout>
 
@@ -83,6 +113,9 @@
         android:layout_width="match_parent"
         android:padding="0dp"
         tools:background="@color/apkmirror_primary"
+        tools:alpha="0.3"
+        app:title="AppName"
+        app:titleTextAppearance="@style/Base.TextAppearance.AppCompat.Title.Inverse"
         android:id="@+id/toolbar"
         android:layout_height="?android:attr/actionBarSize" />
 

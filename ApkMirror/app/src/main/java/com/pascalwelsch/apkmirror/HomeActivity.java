@@ -109,6 +109,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
 
         final int[] xy = new int[2];
         view.getLocationOnScreen(xy);
+        /*final Intent intent = DetailActivity.getInstance(this, appUpdate, xy[0], xy[1]);
+        */
         final Intent intent = AppDetailActivity
                 .newInstance(HomeActivity.this, appUpdate, mXTouchPos, xy[1] + mYTouchPos);
 

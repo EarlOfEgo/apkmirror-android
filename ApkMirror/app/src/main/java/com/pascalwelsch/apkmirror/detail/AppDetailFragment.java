@@ -1,6 +1,7 @@
 package com.pascalwelsch.apkmirror.detail;
 
 import com.nirhart.parallaxscroll.views.ParallaxScrollView;
+import com.pascalwelsch.apkmirror.ApkMirrorApp;
 import com.pascalwelsch.apkmirror.R;
 import com.pascalwelsch.apkmirror.model.AppUpdate;
 import com.squareup.picasso.Picasso;
@@ -10,6 +11,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -17,6 +19,11 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import javax.inject.Inject;
+
+import static com.pascalwelsch.apkmirror.utils.ViewHelper.setBackgroundAlpha;
+import static com.pascalwelsch.apkmirror.utils.ViewHelper.showText;
 
 /**
  * Created by pascalwelsch on 11/14/14.
@@ -38,12 +45,13 @@ public class AppDetailFragment extends Fragment
 
     private ImageView mBlurryImage;
 
+    @Inject Picasso picasso;
+
     private int mHeaderHeight;
 
     private ParallaxScrollView mParallaxContainer;
 
     private Toolbar mToolbar;
-
 
     public static AppDetailFragment newInstance(final AppUpdate appUpdate, final int x,
             final int y) {
@@ -65,6 +73,8 @@ public class AppDetailFragment extends Fragment
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ApkMirrorApp.get(getActivity()).getComponent().inject(this);
+
         mApp = getArguments().getParcelable(INTENT_APP);
     }
 
@@ -76,7 +86,6 @@ public class AppDetailFragment extends Fragment
         final View rootView = inflater.inflate(R.layout.fragment_app_detail, null);
         mBlurryImage = (ImageView) rootView.findViewById(R.id.details_app_blurry_image);
         mAppIcon = (ImageView) rootView.findViewById(R.id.details_app_icon);
-        TextView appName = (TextView) rootView.findViewById(R.id.detail_app_name);
         mToolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
         mParallaxContainer = (ParallaxScrollView) rootView
                 .findViewById(R.id.parallax_scrollview);
@@ -92,30 +101,47 @@ public class AppDetailFragment extends Fragment
         final View headerView = ((ViewGroup) mParallaxContainer.getChildAt(0)).getChildAt(0);
         mHeaderHeight = headerView.getLayoutParams().height;
         mToolbar.setTitle(mApp.getName());
-        appName.setText(mApp.getName());
 
         return rootView;
     }
 
     @Override
     public void onScrollChanged() {
-        int baseColor = getResources().getColor(R.color.apkmirror_primary);
-        float alpha = 1 - (float) Math.max(0, mHeaderHeight - mParallaxContainer.getScrollY()) / mHeaderHeight;
-        setBackgroundAlpha(mToolbar, alpha, baseColor);
-    }
 
-    private void setBackgroundAlpha(View view, float alpha, int baseColor) {
-        int a = Math.min(255, Math.max(0, (int) (alpha * 255))) << 24;
-        int rgb = 0x00ffffff & baseColor;
-        view.setBackgroundColor(a + rgb);
+        // change the color of the toolbar
+        int baseColor = getResources().getColor(R.color.apkmirror_primary);
+        float alpha = 1 - (float) Math.max(0, mHeaderHeight - mParallaxContainer.getScrollY())
+                / mHeaderHeight;
+        setBackgroundAlpha(mToolbar, alpha, baseColor);
     }
 
     @Override
     public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        final RequestCreator requestCreator = Picasso.with(getActivity())
+
+        fillViewWithData();
+
+        // load the app icon and the blurry header icon
+        final RequestCreator requestCreator = picasso
                 .load(mApp.getIconUrl());
         requestCreator.into(mAppIcon);
         requestCreator.transform(new BlurTransform(getActivity(), 8)).into(mBlurryImage);
     }
+
+    private void fillViewWithData() {
+        final View view = getView();
+        if (view == null) {
+            // view not available. skip
+            return;
+        }
+        if (mApp == null) {
+            Log.w(TAG, "try to display app content but mApp is null");
+            return;
+        }
+
+        showText((TextView) view.findViewById(R.id.detail_app_name), mApp.getName());
+        showText((TextView) view.findViewById(R.id.detail_app_publisher), mApp.getPublisher());
+    }
+
+
 }
