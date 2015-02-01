@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/app_detail_info_uninstalled"
+    android:layout_width="match_parent"
+    android:padding="8dp"
+    android:layout_centerVertical="true"
+    android:orientation="vertical"
+    android:layout_height="wrap_content"
+    tools:showIn="@layout/fragment_app_detail">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:padding="4dp"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:text="@string/app_detail_downloading"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            style="@style/Base.TextAppearance.AppCompat.Subhead.Inverse"
+            android:layout_height="wrap_content" />
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            android:layout_height="24dp" />
+    </RelativeLayout>
+
+
+    <ProgressBar
+        android:indeterminate="true"
+        android:id="@+id/app_detail_download_progress"
+        android:layout_width="match_parent"
+        android:layout_height="8dp" />
+
+</LinearLayout>

@@ -11,4 +11,6 @@
     <string name="md5_text">MD5:</string>
     <string name="sha1_text">SHA1:</string>
     <string name="uploader_text">Uploaded by:</string>
+    <string name="app_detail_download">Download</string>
+    <string name="app_detail_downloading">downloading...</string>
 </resources>
