@@ -15,6 +15,10 @@ public class Backend {
 
     /*package*/ static ArrayList<Server> sBackends = new ArrayList<>();
 
+    public static ArrayList<Server> getsBackends() {
+        return sBackends;
+    }
+
     /**
      * @return the current selected Facade
      */

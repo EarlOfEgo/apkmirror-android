@@ -11,6 +11,7 @@ import com.pascalwelsch.apkmirror.model.AppInfo;
 import com.pascalwelsch.apkmirror.model.AppList;
 import com.pascalwelsch.apkmirror.services.ProductionApiService;
 import com.pascalwelsch.apkmirror.widgets.CustomSwipeRefreshLayout;
+import com.pascalwelsch.backendswitch.activity.BackendChangeActivity;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
@@ -23,6 +24,8 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -80,18 +83,22 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
 
             @Override
             public void onResponse(final Response response) throws IOException {
-                final AppList recents = new Gson()
-                        .fromJson(response.body().string(), AppList.class);
+                try {
+                    final AppList recents = new Gson()
+                            .fromJson(response.body().string(), AppList.class);
 
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mAdapter.updateList(recents.getApps());
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mAdapter.updateList(recents.getApps());
 
-                        final int amount = mAdapter.getItemCount();
-                        mRecyclerView.animate();
-                    }
-                });
+                            final int amount = mAdapter.getItemCount();
+                            mRecyclerView.animate();
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -127,6 +134,25 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
     }
 
     @Override
+    public boolean onCreateOptionsMenu(final Menu menu) {
+        super.onCreateOptionsMenu(menu);
+
+        getMenuInflater().inflate(R.menu.home, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.backend:
+                startActivity(new Intent(this, BackendChangeActivity.class));
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
     public boolean onTouch(final View v, final MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             mXTouchPos = (int) event.getX();
@@ -150,17 +176,21 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
 
             @Override
             public void onResponse(final Response response) throws IOException {
-                final AppList recents = new Gson()
-                        .fromJson(response.body().string(), AppList.class);
+                try {
+                    final AppList recents = new Gson()
+                            .fromJson(response.body().string(), AppList.class);
 
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mAdapter.updateList(recents.getApps());
-                        mRecyclerView.animate();
-                        mSwipeRefreshLayout.setRefreshing(false);
-                    }
-                });
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mAdapter.updateList(recents.getApps());
+                            mRecyclerView.animate();
+                            mSwipeRefreshLayout.setRefreshing(false);
+                        }
+                    });
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
             }
         });
     }
