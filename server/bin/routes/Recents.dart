@@ -9,7 +9,7 @@ import 'package:xml/xml.dart' as xml;
 import 'package:html5lib/parser.dart' show parse;
 import 'package:html5lib/dom.dart';
 
-const String RECENT_URL = 'http://www.apkmirror.com/apps_post-sitemap.xml';
+const String URL_BEGIN_RECENT_SITEMAP = 'http://www.apkmirror.com/apps_post-sitemap';
 
 Future<String> parseResponseToString(HttpClientResponse response) {
     final Completer<String> completer = new Completer();
@@ -70,9 +70,10 @@ class Recents {
             Iterable<xml.XmlNode> locs2 = locs.where((
                 xml.XmlNode element) {
                 var url = element.firstChild.text;
-                return url.contains(RECENT_URL);
+                return url.contains(URL_BEGIN_RECENT_SITEMAP);
             });
-            var urlNode = locs2.first;
+            var urlNode = locs2.last;
+            String sitemapUrl = urlNode.text;
             xml.XmlNode node = urlNode.parent;
             String timestamp = urlNode.parent.document.findAllElements('lastmod').first.firstChild.text;
             DateTime date = DateTime.parse(timestamp);
@@ -84,7 +85,7 @@ class Recents {
             } else {
                 print('requesting new data');
                 recentsChangedDate = date;
-                Future<List<String>> recentRequest = new HttpClient().getUrl(Uri.parse(RECENT_URL))
+                Future<List<String>> recentRequest = new HttpClient().getUrl(Uri.parse(sitemapUrl))
                 .then((
                     HttpClientRequest request) {
                     return request.close();
