@@ -1,7 +1,7 @@
 package com.pascalwelsch.apkmirror.adapter;
 
+import com.eowise.recyclerview.stickyheaders.StickyHeadersAdapter;
 import com.pascalwelsch.apkmirror.R;
-import com.pascalwelsch.apkmirror.adapter.stickyheader.StickyHeadersAdapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;

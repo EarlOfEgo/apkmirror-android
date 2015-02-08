@@ -2,10 +2,10 @@ package com.pascalwelsch.apkmirror;
 
 import com.google.gson.Gson;
 
+import com.eowise.recyclerview.stickyheaders.StickyHeadersBuilder;
+import com.eowise.recyclerview.stickyheaders.StickyHeadersItemDecoration;
 import com.pascalwelsch.apkmirror.adapter.HeaderAdapter;
 import com.pascalwelsch.apkmirror.adapter.RecentAppUpdateAdapter;
-import com.pascalwelsch.apkmirror.adapter.stickyheader.StickyHeadersBuilder;
-import com.pascalwelsch.apkmirror.adapter.stickyheader.StickyHeadersItemDecoration;
 import com.pascalwelsch.apkmirror.detail.AppDetailActivity;
 import com.pascalwelsch.apkmirror.model.AppInfo;
 import com.pascalwelsch.apkmirror.model.AppList;
@@ -68,6 +68,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                 .setAdapter(mAdapter)
                 .setRecyclerView(mRecyclerView)
                 .setStickyHeadersAdapter(new HeaderAdapter(mAdapter))
+                .setSticky(false)
                 .build();
 
         mRecyclerView.setAdapter(mAdapter);

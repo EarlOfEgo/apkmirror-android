@@ -36,7 +36,7 @@ dependencies {
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.0.0'
     compile 'com.squareup.picasso:picasso:2.5.0'
     compile 'com.github.nirhart:parallaxscroll:1.0'
-    // compile 'com.eowise:recyclerview-stickyheaders:0.4.3'
+    compile 'com.eowise:recyclerview-stickyheaders:0.5.1@aar'
     compile project(':tray:library')
     compile project(':backendswitch')
     compile fileTree(dir: 'libs', include: ['*.jar'])
