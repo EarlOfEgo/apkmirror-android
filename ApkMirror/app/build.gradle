@@ -34,7 +34,7 @@ dependencies {
     compile 'com.android.support:palette-v7:21.0.0'
     compile 'com.squareup.okhttp:okhttp:2.2.0'
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.0.0'
-    compile 'com.squareup.picasso:picasso:2.3.4'
+    compile 'com.squareup.picasso:picasso:2.5.0'
     compile 'com.github.nirhart:parallaxscroll:1.0'
     // compile 'com.eowise:recyclerview-stickyheaders:0.4.3'
     compile project(':tray:library')
