@@ -1,6 +1,6 @@
 package com.pascalwelsch.apkmirror;
 
-import com.pascalwelsch.apkmirror.model.AppUpdate;
+import com.pascalwelsch.apkmirror.model.AppInfo;
 import com.pascalwelsch.apkmirror.services.DownloadService;
 import com.pascalwelsch.apkmirror.utils.Formater;
 import com.squareup.picasso.Picasso;
@@ -41,7 +41,7 @@ public class DetailActivity extends BaseActivity {
 
     public static class TestFragment extends Fragment implements View.OnClickListener {
 
-        private AppUpdate mApp;
+        private AppInfo mApp;
 
         private TextView mAppName;
 
@@ -63,11 +63,11 @@ public class DetailActivity extends BaseActivity {
             // do nothing
         }
 
-        public static TestFragment newInstance(final AppUpdate appUpdate, final int xPos,
+        public static TestFragment newInstance(final AppInfo appInfo, final int xPos,
                 final int yPos) {
             TestFragment fragment = new TestFragment();
             final Bundle bundle = new Bundle();
-            bundle.putParcelable(INTENT_APP, appUpdate);
+            bundle.putParcelable(INTENT_APP, appInfo);
             bundle.putInt(INTENT_X_POS, xPos);
             bundle.putInt(INTENT_Y_POS, yPos);
             fragment.setArguments(bundle);
@@ -229,7 +229,7 @@ public class DetailActivity extends BaseActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final AppUpdate app = getIntent().getExtras().getParcelable(INTENT_APP);
+        final AppInfo app = getIntent().getExtras().getParcelable(INTENT_APP);
         final int xPos = getIntent().getExtras().getInt(INTENT_X_POS);
         final int yPos = getIntent().getExtras().getInt(INTENT_Y_POS);
         setContentView(R.layout.activity_detail);
@@ -243,10 +243,10 @@ public class DetailActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    public static Intent getInstance(final Context context, final AppUpdate appUpdate,
+    public static Intent getInstance(final Context context, final AppInfo appInfo,
             int xPosition, int yPosition) {
         Intent intent = new Intent(context, DetailActivity.class);
-        intent.putExtra(INTENT_APP, appUpdate);
+        intent.putExtra(INTENT_APP, appInfo);
         intent.putExtra(INTENT_X_POS, xPosition);
         intent.putExtra(INTENT_Y_POS, yPosition);
         return intent;

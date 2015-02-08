@@ -1,7 +1,7 @@
 package com.pascalwelsch.apkmirror.detail;
 
 import com.pascalwelsch.apkmirror.R;
-import com.pascalwelsch.apkmirror.model.AppUpdate;
+import com.pascalwelsch.apkmirror.model.AppInfo;
 
 import android.content.Intent;
 import android.test.ActivityInstrumentationTestCase2;
@@ -23,7 +23,7 @@ public class AppDetailActivityTest extends ActivityInstrumentationTestCase2<AppD
     }
 
     public void testAppIcon() throws Exception {
-        final AppUpdate app = new AppUpdate();
+        final AppInfo app = new AppInfo();
         final String iconUrl
                 = "http://www.apkmirror.com/wp-content/uploads/2014/11/54655c2d1d190.png";
         app.setIconUrl(iconUrl);
@@ -34,7 +34,7 @@ public class AppDetailActivityTest extends ActivityInstrumentationTestCase2<AppD
     }
 
     public void testAppName() throws Exception {
-        final AppUpdate app = new AppUpdate();
+        final AppInfo app = new AppInfo();
         app.setName("TestApp");
         final AppDetailActivity activity = startDetailActivity(app);
 
@@ -43,7 +43,7 @@ public class AppDetailActivityTest extends ActivityInstrumentationTestCase2<AppD
         assertEquals(app.getName(), name.getText());
     }
 
-    private AppDetailActivity startDetailActivity(final AppUpdate app) {
+    private AppDetailActivity startDetailActivity(final AppInfo app) {
         final Intent intent = AppDetailActivity.newInstance(getInstrumentation().getContext(), app);
         final AppDetailActivity appDetailActivity = launchActivity("com.pascalwelsch.apkmirror",
                 AppDetailActivity.class, intent.getExtras());

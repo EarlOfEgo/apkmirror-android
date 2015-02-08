@@ -1,6 +1,6 @@
 package com.pascalwelsch.apkmirror.services;
 
-import com.pascalwelsch.apkmirror.model.AppUpdate;
+import com.pascalwelsch.apkmirror.model.AppInfo;
 
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
@@ -84,7 +84,7 @@ public class DownloadService {
         mContext.registerReceiver(new CompleteInstallReceiver(id), intentFilter);
     }
 
-    public void startDownload(AppUpdate app) {
+    public void startDownload(AppInfo app) {
         // Create request
         DownloadManager.Request request = new DownloadManager.Request(
                 Uri.parse(app.getDownloadUrl()));

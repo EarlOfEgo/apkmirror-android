@@ -1,7 +1,7 @@
 package com.pascalwelsch.apkmirror.utils;
 
 import com.pascalwelsch.apkmirror.R;
-import com.pascalwelsch.apkmirror.model.AppUpdate;
+import com.pascalwelsch.apkmirror.model.AppInfo;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
@@ -30,12 +30,12 @@ public class Formater {
     }
 
     public static void setButtonText(final Context context, final TextView button,
-            final AppUpdate appUpdate) {
+            final AppInfo appInfo) {
         try {
             PackageInfo pInfo = context.getPackageManager()
-                    .getPackageInfo(appUpdate.getPackageName(), 0);
+                    .getPackageInfo(appInfo.getPackageName(), 0);
             int installedVersion = pInfo.versionCode;
-            int updateVersion = appUpdate.getVersion();
+            int updateVersion = appInfo.getVersion();
             if (installedVersion < updateVersion) {
                 button.setText(R.string.app_action_update);
             } else {
@@ -47,13 +47,13 @@ public class Formater {
     }
 
     public static void setButtonTextColor(final Context context, final TextView button,
-            final AppUpdate appUpdate) {
+            final AppInfo appInfo) {
         final Resources resources = context.getResources();
         try {
             PackageInfo pInfo = context.getPackageManager()
-                    .getPackageInfo(appUpdate.getPackageName(), 0);
+                    .getPackageInfo(appInfo.getPackageName(), 0);
             int installedVersion = pInfo.versionCode;
-            int updateVersion = appUpdate.getVersion();
+            int updateVersion = appInfo.getVersion();
             if (installedVersion < updateVersion) {
                 button.setTextColor(resources.getColor(R.color.highlights));
             } else {

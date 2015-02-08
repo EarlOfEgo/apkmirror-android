@@ -1,7 +1,7 @@
 package com.pascalwelsch.apkmirror.adapter;
 
 import com.pascalwelsch.apkmirror.R;
-import com.pascalwelsch.apkmirror.model.AppUpdate;
+import com.pascalwelsch.apkmirror.model.AppInfo;
 import com.pascalwelsch.apkmirror.utils.Formater;
 import com.squareup.picasso.Picasso;
 
@@ -20,7 +20,7 @@ import java.util.List;
  * Created by pascalwelsch on 10/19/14.
  */
 public class RecentAppUpdateAdapter
-        extends ArrayAdapter<AppUpdate, RecentAppUpdateAdapter.RecentAppsViewHolder> {
+        extends ArrayAdapter<AppInfo, RecentAppUpdateAdapter.RecentAppsViewHolder> {
 
     public class RecentAppsViewHolder extends RecyclerView.ViewHolder {
 
@@ -50,10 +50,10 @@ public class RecentAppUpdateAdapter
 
     private LayoutInflater mInflater;
 
-    public RecentAppUpdateAdapter(final Context context, final List<AppUpdate> appUpdates,
+    public RecentAppUpdateAdapter(final Context context, final List<AppInfo> appInfos,
             final View.OnClickListener onClickListener,
             final View.OnTouchListener onTouchListener) {
-        super(appUpdates);
+        super(appInfos);
         mOnClickListener = onClickListener;
         mOnTouchListener = onTouchListener;
         mInflater = LayoutInflater.from(context);
@@ -63,13 +63,13 @@ public class RecentAppUpdateAdapter
 
     @Override
     public void onBindViewHolder(final RecentAppsViewHolder viewHolder, final int position) {
-        final AppUpdate appUpdate = getItem(position);
-        viewHolder.mAppName.setText("" + appUpdate.getName());
-        viewHolder.mPublisherName.setText("" + appUpdate.getPublisher());
-        Picasso.with(mContext).load(appUpdate.getIconUrl()).into(viewHolder.mAppIcon);
+        final AppInfo appInfo = getItem(position);
+        viewHolder.mAppName.setText("" + appInfo.getName());
+        viewHolder.mPublisherName.setText("" + appInfo.getPublisher());
+        Picasso.with(mContext).load(appInfo.getIconUrl()).into(viewHolder.mAppIcon);
 
-        Formater.setButtonText(mContext, viewHolder.mActionInfo, appUpdate);
-        Formater.setButtonTextColor(mContext, viewHolder.mActionInfo, appUpdate);
+        Formater.setButtonText(mContext, viewHolder.mActionInfo, appInfo);
+        Formater.setButtonTextColor(mContext, viewHolder.mActionInfo, appInfo);
     }
 
     @Override

@@ -8,17 +8,17 @@ import android.os.Parcelable;
 /**
  * Created by pascalwelsch on 10/19/14.
  */
-public class AppUpdate implements Parcelable {
+public class AppInfo implements Parcelable {
 
 
-    public static final Parcelable.Creator<AppUpdate> CREATOR
-            = new Parcelable.Creator<AppUpdate>() {
-        public AppUpdate createFromParcel(Parcel source) {
-            return new AppUpdate(source);
+    public static final Parcelable.Creator<AppInfo> CREATOR
+            = new Parcelable.Creator<AppInfo>() {
+        public AppInfo createFromParcel(Parcel source) {
+            return new AppInfo(source);
         }
 
-        public AppUpdate[] newArray(int size) {
-            return new AppUpdate[size];
+        public AppInfo[] newArray(int size) {
+            return new AppInfo[size];
         }
     };
 
@@ -71,11 +71,11 @@ public class AppUpdate implements Parcelable {
     private String mVersionName;
 
 
-    public AppUpdate() {
+    public AppInfo() {
     }
 
 
-    public AppUpdate(final String publisher, final String downloadUrl, final int downloads,
+    public AppInfo(final String publisher, final String downloadUrl, final int downloads,
             final String filename, final long filesize, final String iconUrl,
             final String listingUrl, final String md5, final int minSdk, final String name,
             final String packageName, final String sha1, final String uploaded,
@@ -98,7 +98,7 @@ public class AppUpdate implements Parcelable {
         mVersionName = versionName;
     }
 
-    private AppUpdate(Parcel in) {
+    private AppInfo(Parcel in) {
         this.mPublisher = in.readString();
         this.mDownloadUrl = in.readString();
         this.mDownloads = in.readInt();

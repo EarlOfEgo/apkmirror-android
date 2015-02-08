@@ -38,8 +38,8 @@ public class AppUpdateBuilder {
 
     private String mVersionName;
 
-    public AppUpdate createAppUpdate() {
-        return new AppUpdate(mPublisher, mDownloadUrl, mDownloads, mFilename, mFilesize, mIconUrl,
+    public AppInfo createAppUpdate() {
+        return new AppInfo(mPublisher, mDownloadUrl, mDownloads, mFilename, mFilesize, mIconUrl,
                 mListingUrl, mMd5, mMinSdk, mName, mPackageName, mSha1, mUploaded, mUploader,
                 mVersion, mVersionName);
     }

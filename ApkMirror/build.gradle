@@ -12,6 +12,11 @@ buildscript {
     }
 }
 
+ext {
+    trayAuthority = "com.pascalwelsch.apkmirror.preferenecs"
+    backend = "prod"
+}
+
 allprojects {
     repositories {
         jcenter()

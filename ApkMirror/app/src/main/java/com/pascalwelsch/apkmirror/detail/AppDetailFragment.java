@@ -2,7 +2,7 @@ package com.pascalwelsch.apkmirror.detail;
 
 import com.nirhart.parallaxscroll.views.ParallaxScrollView;
 import com.pascalwelsch.apkmirror.R;
-import com.pascalwelsch.apkmirror.model.AppUpdate;
+import com.pascalwelsch.apkmirror.model.AppInfo;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 
@@ -37,7 +37,7 @@ public class AppDetailFragment extends Fragment
 
     private static final String TAG = AppDetailFragment.class.getSimpleName();
 
-    private AppUpdate mApp;
+    private AppInfo mApp;
 
     private ImageView mAppIcon;
 
@@ -51,11 +51,11 @@ public class AppDetailFragment extends Fragment
 
     private Toolbar mToolbar;
 
-    public static AppDetailFragment newInstance(final AppUpdate appUpdate, final int x,
+    public static AppDetailFragment newInstance(final AppInfo appInfo, final int x,
             final int y) {
         AppDetailFragment fragment = new AppDetailFragment();
         final Bundle bundle = new Bundle();
-        bundle.putParcelable(INTENT_APP, appUpdate);
+        bundle.putParcelable(INTENT_APP, appInfo);
         if (x > 0 && y > 0) {
             bundle.putInt(INTENT_TOUCH_X, x);
             bundle.putInt(INTENT_TOUCH_Y, y);
@@ -64,7 +64,7 @@ public class AppDetailFragment extends Fragment
         return fragment;
     }
 
-    public static AppDetailFragment newInstance(final AppUpdate app) {
+    public static AppDetailFragment newInstance(final AppInfo app) {
         return newInstance(app, -1, -1);
     }
 

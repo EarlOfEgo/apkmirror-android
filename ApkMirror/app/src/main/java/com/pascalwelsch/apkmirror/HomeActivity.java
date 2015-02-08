@@ -7,9 +7,9 @@ import com.pascalwelsch.apkmirror.adapter.RecentAppUpdateAdapter;
 import com.pascalwelsch.apkmirror.adapter.stickyheader.StickyHeadersBuilder;
 import com.pascalwelsch.apkmirror.adapter.stickyheader.StickyHeadersItemDecoration;
 import com.pascalwelsch.apkmirror.detail.AppDetailActivity;
-import com.pascalwelsch.apkmirror.model.AppUpdate;
-import com.pascalwelsch.apkmirror.model.Recents;
-import com.pascalwelsch.apkmirror.services.ApiService;
+import com.pascalwelsch.apkmirror.model.AppInfo;
+import com.pascalwelsch.apkmirror.model.AppList;
+import com.pascalwelsch.apkmirror.services.ProductionApiService;
 import com.pascalwelsch.apkmirror.widgets.CustomSwipeRefreshLayout;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
@@ -58,7 +58,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(linearLayoutManager);
-        mAdapter = new RecentAppUpdateAdapter(HomeActivity.this, new ArrayList<AppUpdate>(),
+        mAdapter = new RecentAppUpdateAdapter(HomeActivity.this, new ArrayList<AppInfo>(),
                 this, this);
 
         mHeaderDecorator = new StickyHeadersBuilder()
@@ -72,7 +72,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
 
         setupSwipeRefreshLayout();
 
-        ApiService.getRecents(new Callback() {
+        new ProductionApiService().getRecents(new Callback() {
             @Override
             public void onFailure(final Request request, final IOException e) {
 
@@ -80,8 +80,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
 
             @Override
             public void onResponse(final Response response) throws IOException {
-                final Recents recents = new Gson()
-                        .fromJson(response.body().string(), Recents.class);
+                final AppList recents = new Gson()
+                        .fromJson(response.body().string(), AppList.class);
 
                 runOnUiThread(new Runnable() {
                     @Override
@@ -101,7 +101,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
     @Override
     public void onClick(final View view) {
         int position = mRecyclerView.getChildPosition(view);
-        final AppUpdate appUpdate = mAdapter.getItem(position);
+        final AppInfo appInfo = mAdapter.getItem(position);
         final View icon = view.findViewById(R.id.recents_app_icon);
         final View name = view.findViewById(R.id.recents_app_name);
         final View publisher = view.findViewById(R.id.recents_app_publisher);
@@ -110,7 +110,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         final int[] xy = new int[2];
         view.getLocationOnScreen(xy);
         final Intent intent = AppDetailActivity
-                .newInstance(HomeActivity.this, appUpdate, mXTouchPos, xy[1] + mYTouchPos);
+                .newInstance(HomeActivity.this, appInfo, mXTouchPos, xy[1] + mYTouchPos);
 
         Bundle bundle = Bundle.EMPTY;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -137,7 +137,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
 
     private void refresh() {
 
-        ApiService.getRecents(new Callback() {
+        new ProductionApiService().getRecents(new Callback() {
             @Override
             public void onFailure(final Request request, final IOException e) {
                 runOnUiThread(new Runnable() {
@@ -150,8 +150,8 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
 
             @Override
             public void onResponse(final Response response) throws IOException {
-                final Recents recents = new Gson()
-                        .fromJson(response.body().string(), Recents.class);
+                final AppList recents = new Gson()
+                        .fromJson(response.body().string(), AppList.class);
 
                 runOnUiThread(new Runnable() {
                     @Override
