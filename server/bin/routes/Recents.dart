@@ -75,7 +75,7 @@ class Recents {
             var urlNode = locs2.last;
             String sitemapUrl = urlNode.text;
             xml.XmlNode node = urlNode.parent;
-            String timestamp = urlNode.parent.document.findAllElements('lastmod').first.firstChild.text;
+            String timestamp = urlNode.parent.document.findAllElements('lastmod').last.firstChild.text;
             DateTime date = DateTime.parse(timestamp);
             if (!date.isAfter(recentsChangedDate)) {
 
