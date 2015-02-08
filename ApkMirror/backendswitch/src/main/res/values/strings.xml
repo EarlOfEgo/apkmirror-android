@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Backendswitch</string>
+    <string name="choose_backend">Choose the Backend:</string>
+</resources>

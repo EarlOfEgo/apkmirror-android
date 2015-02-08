@@ -2,15 +2,16 @@ package com.pascalwelsch.apkmirror;
 
 import com.google.gson.Gson;
 
+import com.eowise.recyclerview.stickyheaders.StickyHeadersBuilder;
+import com.eowise.recyclerview.stickyheaders.StickyHeadersItemDecoration;
 import com.pascalwelsch.apkmirror.adapter.HeaderAdapter;
 import com.pascalwelsch.apkmirror.adapter.RecentAppUpdateAdapter;
-import com.pascalwelsch.apkmirror.adapter.stickyheader.StickyHeadersBuilder;
-import com.pascalwelsch.apkmirror.adapter.stickyheader.StickyHeadersItemDecoration;
 import com.pascalwelsch.apkmirror.detail.AppDetailActivity;
-import com.pascalwelsch.apkmirror.model.AppUpdate;
-import com.pascalwelsch.apkmirror.model.Recents;
-import com.pascalwelsch.apkmirror.services.ApiService;
+import com.pascalwelsch.apkmirror.model.AppInfo;
+import com.pascalwelsch.apkmirror.model.AppList;
+import com.pascalwelsch.apkmirror.services.ProductionApiService;
 import com.pascalwelsch.apkmirror.widgets.CustomSwipeRefreshLayout;
+import com.pascalwelsch.backendswitch.activity.BackendChangeActivity;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
@@ -23,6 +24,8 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -58,13 +61,14 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(linearLayoutManager);
-        mAdapter = new RecentAppUpdateAdapter(HomeActivity.this, new ArrayList<AppUpdate>(),
+        mAdapter = new RecentAppUpdateAdapter(HomeActivity.this, new ArrayList<AppInfo>(),
                 this, this);
 
         mHeaderDecorator = new StickyHeadersBuilder()
                 .setAdapter(mAdapter)
                 .setRecyclerView(mRecyclerView)
                 .setStickyHeadersAdapter(new HeaderAdapter(mAdapter))
+                .setSticky(false)
                 .build();
 
         mRecyclerView.setAdapter(mAdapter);
@@ -72,7 +76,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
 
         setupSwipeRefreshLayout();
 
-        ApiService.getRecents(new Callback() {
+        new ProductionApiService().getRecents(new Callback() {
             @Override
             public void onFailure(final Request request, final IOException e) {
 
@@ -80,18 +84,22 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
 
             @Override
             public void onResponse(final Response response) throws IOException {
-                final Recents recents = new Gson()
-                        .fromJson(response.body().string(), Recents.class);
+                try {
+                    final AppList recents = new Gson()
+                            .fromJson(response.body().string(), AppList.class);
 
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mAdapter.updateList(recents.getApps());
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mAdapter.updateList(recents.getApps());
 
-                        final int amount = mAdapter.getItemCount();
-                        mRecyclerView.animate();
-                    }
-                });
+                            final int amount = mAdapter.getItemCount();
+                            mRecyclerView.animate();
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -101,7 +109,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
     @Override
     public void onClick(final View view) {
         int position = mRecyclerView.getChildPosition(view);
-        final AppUpdate appUpdate = mAdapter.getItem(position);
+        final AppInfo appInfo = mAdapter.getItem(position);
         final View icon = view.findViewById(R.id.recents_app_icon);
         final View name = view.findViewById(R.id.recents_app_name);
         final View publisher = view.findViewById(R.id.recents_app_publisher);
@@ -110,7 +118,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         final int[] xy = new int[2];
         view.getLocationOnScreen(xy);
         final Intent intent = AppDetailActivity
-                .newInstance(HomeActivity.this, appUpdate, mXTouchPos, xy[1] + mYTouchPos);
+                .newInstance(HomeActivity.this, appInfo, mXTouchPos, xy[1] + mYTouchPos);
 
         Bundle bundle = Bundle.EMPTY;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -127,6 +135,25 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
     }
 
     @Override
+    public boolean onCreateOptionsMenu(final Menu menu) {
+        super.onCreateOptionsMenu(menu);
+
+        getMenuInflater().inflate(R.menu.home, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.backend:
+                startActivity(new Intent(this, BackendChangeActivity.class));
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
     public boolean onTouch(final View v, final MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             mXTouchPos = (int) event.getX();
@@ -137,7 +164,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
 
     private void refresh() {
 
-        ApiService.getRecents(new Callback() {
+        new ProductionApiService().getRecents(new Callback() {
             @Override
             public void onFailure(final Request request, final IOException e) {
                 runOnUiThread(new Runnable() {
@@ -150,17 +177,21 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
 
             @Override
             public void onResponse(final Response response) throws IOException {
-                final Recents recents = new Gson()
-                        .fromJson(response.body().string(), Recents.class);
+                try {
+                    final AppList recents = new Gson()
+                            .fromJson(response.body().string(), AppList.class);
 
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mAdapter.updateList(recents.getApps());
-                        mRecyclerView.animate();
-                        mSwipeRefreshLayout.setRefreshing(false);
-                    }
-                });
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mAdapter.updateList(recents.getApps());
+                            mRecyclerView.animate();
+                            mSwipeRefreshLayout.setRefreshing(false);
+                        }
+                    });
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
             }
         });
     }

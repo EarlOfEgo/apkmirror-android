@@ -1,0 +1,3 @@
+[submodule "ApkMirror/tray"]
+	path = ApkMirror/tray
+	url = git@github.com:passsy/tray.git

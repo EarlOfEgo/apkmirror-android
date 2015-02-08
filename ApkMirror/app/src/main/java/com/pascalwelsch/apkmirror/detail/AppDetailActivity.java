@@ -2,7 +2,7 @@ package com.pascalwelsch.apkmirror.detail;
 
 import com.pascalwelsch.apkmirror.BaseActivity;
 import com.pascalwelsch.apkmirror.R;
-import com.pascalwelsch.apkmirror.model.AppUpdate;
+import com.pascalwelsch.apkmirror.model.AppInfo;
 
 import android.content.Context;
 import android.content.Intent;
@@ -28,7 +28,7 @@ public class AppDetailActivity extends BaseActivity {
         if (savedInstanceState == null) {
             try {
                 final Bundle extras = getIntent().getExtras();
-                AppUpdate app = extras.getParcelable(INTENT_APP);
+                AppInfo app = extras.getParcelable(INTENT_APP);
                 AppDetailFragment fragment;
                 if (extras.containsKey(INTENT_TOUCH_X) && extras.containsKey(INTENT_TOUCH_Y)) {
                     final int touchX = extras.getInt(INTENT_TOUCH_X, -1);
@@ -52,7 +52,7 @@ public class AppDetailActivity extends BaseActivity {
      * @param y   the y touch point
      * @return an intent.
      */
-    public static Intent newInstance(final Context context, final AppUpdate app, final int x,
+    public static Intent newInstance(final Context context, final AppInfo app, final int x,
             final int y) {
         Intent intent = new Intent(context, AppDetailActivity.class);
         intent.putExtra(INTENT_APP, app);
@@ -63,7 +63,7 @@ public class AppDetailActivity extends BaseActivity {
         return intent;
     }
 
-    public static Intent newInstance(final Context context, final AppUpdate app) {
+    public static Intent newInstance(final Context context, final AppInfo app) {
         return newInstance(context, app, -1, -1);
     }
 

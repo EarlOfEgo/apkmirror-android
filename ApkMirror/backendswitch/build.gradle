@@ -1,0 +1,37 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 21
+    buildToolsVersion "21.1.2"
+
+    defaultConfig {
+        minSdkVersion 16
+        targetSdkVersion 21
+        versionCode 1
+        versionName "0.1"
+
+        def backend = getBackend()
+        buildConfigField "String", "BACKEND", backend == null ? "null" : "\"$backend\""
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+String getBackend() {
+    if (project.properties.containsKey("backend")) {
+        def backend = project.properties.get("backend")
+        return backend
+    } else {
+        return null
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:appcompat-v7:21.0.3'
+    compile project(':tray:library')
+}

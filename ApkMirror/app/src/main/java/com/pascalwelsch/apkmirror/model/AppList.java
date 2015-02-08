@@ -10,31 +10,31 @@ import java.util.List;
 /**
  * Created by pascalwelsch on 10/19/14.
  */
-public class AppUpdateList implements Parcelable {
+public class AppList implements Parcelable {
 
-    public static final Creator<AppUpdateList> CREATOR = new Creator<AppUpdateList>() {
-        public AppUpdateList createFromParcel(Parcel source) {
-            return new AppUpdateList(source);
+    public static final Creator<AppList> CREATOR = new Creator<AppList>() {
+        public AppList createFromParcel(Parcel source) {
+            return new AppList(source);
         }
 
-        public AppUpdateList[] newArray(int size) {
-            return new AppUpdateList[size];
+        public AppList[] newArray(int size) {
+            return new AppList[size];
         }
     };
 
     @SerializedName("apps")
-    private List<AppUpdate> mApps;
+    private List<AppInfo> mApps;
 
     @SerializedName("number")
     private int mNumber;
 
-    public AppUpdateList(final List<AppUpdate> apps, final int number) {
+    public AppList(final List<AppInfo> apps, final int number) {
         mApps = apps;
         mNumber = number;
     }
 
-    private AppUpdateList(Parcel in) {
-        in.readList(this.mApps, AppUpdate.class.getClassLoader());
+    private AppList(Parcel in) {
+        in.readList(this.mApps, AppInfo.class.getClassLoader());
         this.mNumber = in.readInt();
     }
 
@@ -43,15 +43,15 @@ public class AppUpdateList implements Parcelable {
         return 0;
     }
 
-    public List<AppUpdate> getApps() {
+    public List<AppInfo> getApps() {
         return mApps;
     }
 
-    public void setApps(final List<AppUpdate> apps) {
+    public void setApps(final List<AppInfo> apps) {
         mApps = apps;
     }
 
-    public static Creator<AppUpdateList> getCreator() {
+    public static Creator<AppList> getCreator() {
         return CREATOR;
     }
 

@@ -33,7 +33,7 @@ public class CustomSwipeRefreshLayout extends SwipeRefreshLayout {
             if (layoutManager instanceof LinearLayoutManager) {
                 final int pos = ((LinearLayoutManager) layoutManager)
                         .findFirstCompletelyVisibleItemPosition();
-                Log.v(TAG, "pos: " + pos);
+                //Log.v(TAG, "pos: " + pos);
                 return pos > 0;
             }
         }

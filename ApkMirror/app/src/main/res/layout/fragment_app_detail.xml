@@ -1,19 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/details_app_blurry_image"
-        android:layout_width="match_parent"
-        android:scaleType="matrix"
-        android:layout_height="wrap_content" />
 
-    <TextView
-        android:id="@+id/detail_app_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <com.nirhart.parallaxscroll.views.ParallaxScrollView
+        android:layout_width="match_parent"
+        android:id="@+id/parallax_scrollview"
+        android:layout_height="match_parent"
+        app:parallax_factor="1.9">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_height="wrap_content">
+
+
+            <ImageView
+                android:id="@+id/details_app_blurry_image"
+                android:layout_width="match_parent"
+                android:scaleType="centerCrop"
+                tools:src="@drawable/ic_launcher"
+                android:layout_height="150dp" />
+
+            <RelativeLayout
+                android:id="@+id/main_bar"
+                android:layout_width="match_parent"
+                android:layout_below="@id/details_app_blurry_image"
+                android:background="#2378e0"
+                android:paddingLeft="90dp"
+                android:layout_height="170dp">
+
+                <TextView
+                    android:id="@+id/detail_app_name"
+                    android:singleLine="true"
+                    android:ellipsize="end"
+                    android:layout_width="match_parent"
+                    android:padding="8dp"
+                    style="@style/Base.TextAppearance.AppCompat.Title.Inverse"
+                    android:text="AppName"
+                    android:layout_height="wrap_content" />
+
+            </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/details_app_icon"
+                android:layout_width="70dp"
+                android:scaleType="centerCrop"
+                tools:src="@drawable/ic_launcher"
+                android:layout_marginTop="-30dp"
+                android:layout_marginLeft="20dp"
+                android:layout_alignTop="@id/main_bar"
+                android:layout_height="70dp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_below="@id/main_bar"
+                android:layout_height="wrap_content">
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="600dp"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginRight="4dp"
+                    android:layout_marginTop="4dp"
+                    android:elevation="8dp"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    app:cardCornerRadius="2dp"
+                    app:cardUseCompatPadding="true"
+                    app:contentPadding="4dp"
+                    tools:layout_margin="8dp">
+
+                </android.support.v7.widget.CardView>
+
+            </RelativeLayout>
+        </RelativeLayout>
+    </com.nirhart.parallaxscroll.views.ParallaxScrollView>
+
+    <android.support.v7.widget.Toolbar
+        android:layout_width="match_parent"
+        android:padding="0dp"
+        tools:background="@color/apkmirror_primary"
+        android:id="@+id/toolbar"
+        android:layout_height="?android:attr/actionBarSize" />
 
 </RelativeLayout>
