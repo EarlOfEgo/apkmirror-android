@@ -9,13 +9,25 @@ android {
         minSdkVersion 17
         targetSdkVersion 21
         versionCode 1
-        versionName "1.0"
+        versionName "0.2"
     }
+
+    productFlavors {
+        dev {
+            buildConfigField "boolean", "BACKEND_SWITCH_ENABLED", "true"
+        }
+
+        user {
+            buildConfigField "boolean", "BACKEND_SWITCH_ENABLED", "false"
+        }
+    }
+
     buildTypes {
 
         debug {
             buildConfigField "String", "ALTERNATIVE_BACKEND_URL",
-                    "\"http://www.pascalwelsch.com:4040/recents\""
+                    "\"http://www.pascalwelsch.com:8080/\""
+            versionNameSuffix = '-SNAPSHOT'
         }
 
         release {

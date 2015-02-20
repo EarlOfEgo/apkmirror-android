@@ -6,7 +6,6 @@ import com.eowise.recyclerview.stickyheaders.StickyHeadersBuilder;
 import com.eowise.recyclerview.stickyheaders.StickyHeadersItemDecoration;
 import com.pascalwelsch.apkmirror.adapter.HeaderAdapter;
 import com.pascalwelsch.apkmirror.adapter.RecentAppUpdateAdapter;
-import com.pascalwelsch.apkmirror.detail.AppDetailActivity;
 import com.pascalwelsch.apkmirror.model.AppInfo;
 import com.pascalwelsch.apkmirror.model.AppList;
 import com.pascalwelsch.apkmirror.services.ProductionApiService;
@@ -117,8 +116,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
 
         final int[] xy = new int[2];
         view.getLocationOnScreen(xy);
-        final Intent intent = AppDetailActivity
-                .newInstance(HomeActivity.this, appInfo, mXTouchPos, xy[1] + mYTouchPos);
+        final Intent intent = DetailActivity
+                .getInstance(HomeActivity.this, appInfo, mXTouchPos, xy[1] + mYTouchPos);
+        //final Intent intent = AppDetailActivity.newInstance(HomeActivity.this, appInfo, mXTouchPos, xy[1] + mYTouchPos);
 
         Bundle bundle = Bundle.EMPTY;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -138,7 +138,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
     public boolean onCreateOptionsMenu(final Menu menu) {
         super.onCreateOptionsMenu(menu);
 
-        getMenuInflater().inflate(R.menu.home, menu);
+        if (BuildConfig.BACKEND_SWITCH_ENABLED) {
+            getMenuInflater().inflate(R.menu.home, menu);
+        }
         return true;
     }
 
@@ -189,7 +191,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                             mSwipeRefreshLayout.setRefreshing(false);
                         }
                     });
-                } catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
