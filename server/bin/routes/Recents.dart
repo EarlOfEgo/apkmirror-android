@@ -186,8 +186,16 @@ App parseInfoHtml(String first) {
     String infos = element.text;
     //print(infos);
     String version = new RegExp(r'Version: (.*)').allMatches(infos).last.group(1);
-    int appVersion = int.parse(new RegExp(r'\((\d+)\)').allMatches(version).last.group(1));
-    String versionName = new RegExp(r'(.*) \(').firstMatch(version).group(1);
+    int appVersion = -1;
+    var versionMatches = new RegExp(r'\((\d+)\)').allMatches(version);
+    if (versionMatches.length > 0) {
+        appVersion = int.parse(versionMatches.last.group(1));
+    }
+    String versionName = "";
+    var versionMatch = new RegExp(r'(.*) \(').firstMatch(version);
+    if (versionMatch != null) {
+        versionName = versionMatch.group(1);
+    }
     String fileName = new RegExp(r'File name: (.*)').allMatches(infos).last.group(1);
     String fileSize = new RegExp(r'File size: (.*)').allMatches(infos).last.group(1);
     num fileSizeInByte = num.parse(new RegExp(r'\((.*) bytes')
